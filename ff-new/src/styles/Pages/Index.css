@@ -1,0 +1,88 @@
+/* Estilo general del cuerpo */
+body {
+    font-family: 'Montserrat', sans-serif;
+    background: black;
+    margin: 0;
+}
+
+.containerLogo{
+    background-image: url(../../assets/img/fondoLogo.png);
+}
+
+.form-label {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+}
+
+.form-control {
+    border: 2px solid #333;
+    border-radius: 5px;
+}
+
+.bx {
+    margin-right: 0.3rem;
+}
+
+a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+a:hover {
+    color: #007bff;
+    text-decoration: none;
+    border-bottom: 3px solid #007bff;
+}
+
+#LogoFilosofilm{
+    width:50%;
+    height: auto;
+    margin: -45px;
+}
+
+.containerLogin{
+    margin-top: -20px;
+}
+
+.containerForm{
+    height: 550px;
+    border-left: 5px solid #2C1810;
+}   
+
+.foto{
+    background-image: url(../../assets/img/7art.jpg);
+	background-repeat: no-repeat;
+    background-size: cover;
+    height: 550px;
+    width: auto;
+}
+
+h1{
+    text-align: center;
+    color: white;
+    margin: 20px 0;
+    font-family: 'Lobster', cursive;
+}
+
+h2{
+    font-size: 25px;
+    font-weight: bold;
+    text-align: center;
+    font-style: oblique;
+}
+
+.form-label{
+    margin: -40px 10px 10px 0;
+}
+
+button{
+    margin: -30px;
+}
+
+
+
+
+
+
+
