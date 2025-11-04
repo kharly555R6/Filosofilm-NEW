@@ -1,0 +1,23 @@
+body{
+    margin: 0;
+    font-weight: 700;
+}
+
+.fondoLogo {
+    background-image: url(../../assets/img/fondoLogo.png);
+    border: 8px solid #FFD700;
+    border-radius: 10px;
+    color: #ffffff;
+    text-align: justify;
+    padding: 0 8%;
+}
+
+.h1QueEsFF {
+    color: #FFD700;
+}
+
+.imgQueEsFF{
+    outline: 8px solid #FFD700;
+    border-radius: 10px;
+    max-width: 90%;
+}

@@ -33,22 +33,12 @@ const FormIS: React.FC = () => {
         <div className="d-grid">
           <button
             type="submit"
-            className="btn btn-dark"
+            className="btn btn-dark font-weight-bold w-100"
           >
             Iniciar sesión
           </button>
         </div>
 
-        <div className="my-3">
-          <span>
-            ¿No tienes cuenta?
-          </span>
-          <br />
-          <a href="/registrarse">
-              <strong>Registrate</strong>
-          </a>
-          <br />
-        </div>
       </form>
     </div>
   );

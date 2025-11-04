@@ -14,11 +14,8 @@ import MiInformacion from './pages/MiInformacion';
 import MisLikes from './pages/MisLikes';
 import MisResenas from './pages/MisResenas';
 import Moderador from './pages/Moderador';
-import Nosotros from './pages/Nosotros';
 import Perfil from './pages/Perfil';
 import PropuestasDeCambio from './pages/PropuestasDeCambio';
-import QueEsFF from './pages/QueEsFF';
-import Registrarse from './pages/Registrarse';
 
 function App() {
   return (
@@ -39,11 +36,8 @@ function App() {
           <Route path="/MisLikes" element={<MisLikes/>} />
           <Route path="/MisResenas" element={<MisResenas/>} />
           <Route path="/Moderador" element={<Moderador/>} />
-          <Route path="/Nosotros" element={<Nosotros/>} />
           <Route path="/Perfil" element={<Perfil/>} />
           <Route path="/Propuestasdecambio" element={<PropuestasDeCambio/>} />
-          <Route path="/QueEsFF" element={<QueEsFF/>} />
-          <Route path="/registrarse" element={<Registrarse/>} />
         </Routes>
       </div>
     </Router>

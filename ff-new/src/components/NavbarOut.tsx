@@ -1,27 +1,58 @@
 import React from "react";
-import '../styles/Components/NavbarOut.css';
+import "../styles/Components/NavbarOut.css";
 
-const Navbar: React.FC = () => {
+interface NavbarOutProps {
+  onRegisterClick?: () => void;
+  onLoginClick?: () => void;
+  onNosotrosClick?: () => void;
+  onQueEsFFClick?: () => void;
+}
+
+const NavbarOut: React.FC<NavbarOutProps> = ({
+  onRegisterClick,
+  onLoginClick,
+  onNosotrosClick,
+  onQueEsFFClick,
+}) => {
   return (
     <nav className="navbarout-bg">
       <ul className="navbarout-list">
         <li className="navbarout-item">
-          <a className="navbarout-link" href="/">
+          <a
+            className="navbarout-link"
+            style={{ cursor: "pointer" }}
+            onClick={onLoginClick}
+          >
             <strong>Login</strong>
           </a>
         </li>
+
         <li className="navbarout-item">
-          <a className="navbarout-link" href="/registrarse">
+          <a
+            className="navbarout-link"
+            style={{ cursor: "pointer" }}
+            onClick={onRegisterClick}
+          >
             <strong>Registrarse</strong>
           </a>
         </li>
+
         <li className="navbarout-item">
-          <a className="navbarout-link" href="/Nosotros">
+          <a
+            className="navbarout-link"
+            style={{ cursor: "pointer" }}
+            onClick={onNosotrosClick}
+          >
             <strong>Nosotros</strong>
           </a>
         </li>
+
         <li className="navbarout-item">
-          <a className="navbarout-link" href="/QueEsFF">
+          <a
+            className="navbarout-link"
+            style={{ cursor: "pointer" }}
+            onClick={onQueEsFFClick}
+          >
             <strong>Sobre Filosofilm</strong>
           </a>
         </li>
@@ -30,4 +61,4 @@ const Navbar: React.FC = () => {
   );
 };
 
-export default Navbar;
+export default NavbarOut;

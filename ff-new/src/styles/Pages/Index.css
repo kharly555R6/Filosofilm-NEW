@@ -3,6 +3,7 @@ body {
     font-family: 'Montserrat', sans-serif;
     background: black;
     margin: 0;
+    overflow-y: scroll; 
 }
 
 .containerLogo{
@@ -24,12 +25,14 @@ body {
     margin-right: 0.3rem;
 }
 
-a {
+.buttonRegister-Back {
     text-decoration: none;
     color: #007bff;
+    text-shadow: #007bff;
+    font-weight: 600;
 }
 
-a:hover {
+.buttonRegister-Back:hover {
     color: #007bff;
     text-decoration: none;
     border-bottom: 3px solid #007bff;
@@ -37,6 +40,12 @@ a:hover {
 
 #LogoFilosofilm{
     width:50%;
+    height: auto;
+    margin: -45px;
+}
+
+#LogoFilosofilmN{
+    width:60%;
     height: auto;
     margin: -45px;
 }
@@ -52,7 +61,7 @@ a:hover {
 
 .foto{
     background-image: url(../../assets/img/7art.jpg);
-	background-repeat: no-repeat;
+    background-repeat: no-repeat;
     background-size: cover;
     height: 550px;
     width: auto;
@@ -80,9 +89,6 @@ button{
     margin: -30px;
 }
 
-
-
-
-
-
-
+.frase-div {
+    margin-top: -35px;
+}
