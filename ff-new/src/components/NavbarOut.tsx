@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/Components/NavbarOut.css";
+import "../styles/Components/Navbar.css";
 
 interface NavbarOutProps {
   onRegisterClick?: () => void;

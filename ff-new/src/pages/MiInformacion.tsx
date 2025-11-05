@@ -1,30 +1,13 @@
 import React from "react";
 
+import NavbarIn from "../components/NavbarIn";
+
+
 const Perfil: React.FC = () => {
   return (
     <div>
-      {/* NAVBAR PRINCIPAL */}
-      <div className="bg-secondary">
-        <ul className="nav justify-content-end">
-          <li className="nav-item">
-            <a className="nav-link" href="/Inicio">
-              <strong>Inicio</strong>
-            </a>
-          </li>
-
-          <li className="nav-item">
-            <a className="nav-link" href="/Perfil" id="nombreUsuario">
-              <strong>@Usuario</strong>
-            </a>
-          </li>
-
-          <li className="nav-item">
-            <a id="cerrarSesionLink" className="nav-link" href="#">
-              <strong>Cerrar Sesión</strong>
-            </a>
-          </li>
-        </ul>
-      </div>
+      
+      <NavbarIn />
 
       {/* SUBNAV DE PERFIL */}
       <div className="bg-secondary">

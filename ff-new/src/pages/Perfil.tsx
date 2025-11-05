@@ -1,37 +1,33 @@
 import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import NavbarIn from "../components/NavbarIn";
 
 const Perfil: React.FC = () => {
+  const navigate = useNavigate(); // 🔹 Hook necesario para redirigir
+
+  // 🔹 Funciones de navegación para el Navbar
+  const handleInicio = () => navigate("/InicioDelUsuario");
+  const handlePeliculas = () => navigate("/InicioPelicula");
+  const handlePerfil = () => navigate("/Perfil");
+  const handleLogout = () => navigate("/");
 
   useEffect(() => {
     // Aquí puedes agregar la lógica de js/Perfil.js
-    // Por ejemplo:
+    // Ejemplo de futura integración:
     // fetch('/api/favoritos').then(res => res.json()).then(data => setFavoritos(data));
   }, []);
 
   return (
     <div>
-      {/* Navbar superior */}
-      <div className="bg-secondary">
-        <ul className="nav justify-content-end AQUI">
-          <li className="nav-item">
-            <a className="nav-link" href="/Inicio">
-              <strong>Inicio</strong>
-            </a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link" href="/Perfil" id="nombreUsuario">
-              <strong>@Usuario</strong>
-            </a>
-          </li>
-          <li className="nav-item">
-            <a id="cerrarSesionLink" className="nav-link" href="#">
-              <strong>Cerrar Sesión</strong>
-            </a>
-          </li>
-        </ul>
-      </div>
+      {/* 🔹 Navbar superior */}
+      <NavbarIn
+        onInicioClick={handleInicio}
+        onPeliculasClick={handlePeliculas}
+        onPerfilClick={handlePerfil}
+        onLogoutClick={handleLogout}
+      />
 
-      {/* Navbar inferior */}
+      {/* 🔹 Navbar inferior */}
       <div className="bg-secondary">
         <ul className="nav nav-pills nav-fill">
           <li className="nav-item bgactivo">
@@ -57,7 +53,7 @@ const Perfil: React.FC = () => {
         </ul>
       </div>
 
-      {/* Contenido principal */}
+      {/* 🔹 Contenido principal */}
       <div id="ContenedorPrincipal">
         <div className="container">
           <div className="row text-light py-3">
@@ -68,9 +64,9 @@ const Perfil: React.FC = () => {
 
           {/* Contenedor de favoritos */}
           <div id="ContenedorFavoritos" className="row">
-            {/* Aquí puedes renderizar dinámicamente tus películas favoritas */}
+            {/* Aquí podrías renderizar tus películas favoritas */}
             {/* Ejemplo:
-              {favoritos.map(p => (
+              {favoritos.map((p) => (
                 <div key={p.id} className="col-md-3 mb-3">
                   <div className="card">
                     <img src={p.imagen} className="card-img-top" alt={p.titulo} />

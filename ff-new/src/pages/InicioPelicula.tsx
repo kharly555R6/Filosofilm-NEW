@@ -1,41 +1,36 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import NavbarIn from "../components/NavbarIn";
 
 const PeliculaPantalla: React.FC = () => {
+  const navigate = useNavigate();
+
+  // 🔹 Funciones de navegación para el Navbar
+  const handleInicio = () => navigate("/InicioDelUsuario");
+  const handlePeliculas = () => navigate("/InicioPelicula");
+  const handlePerfil = () => navigate("/Perfil");
+  const handleLogout = () => navigate("/");
+
   return (
     <div>
-      {/* NAVBAR */}
-      <div className="bg-secondary">
-        <ul className="nav justify-content-end">
-          <li className="nav-item">
-            <a className="nav-link" href="/Inicio">
-              <strong>Inicio</strong>
-            </a>
-          </li>
+      {/* 🔹 Navbar funcional */}
+      <NavbarIn
+        onInicioClick={handleInicio}
+        onPeliculasClick={handlePeliculas}
+        onPerfilClick={handlePerfil}
+        onLogoutClick={handleLogout}
+      />
 
-          <li className="nav-item">
-            <a className="nav-link" href="/Perfil" id="nombreUsuario">
-              <strong>@Usuario</strong>
-            </a>
-          </li>
-
-          <li className="nav-item">
-            <a id="cerrarSesionLink" className="nav-link" href="#">
-              <strong>Cerrar Sesión</strong>
-            </a>
-          </li>
-        </ul>
-      </div>
-
-      {/* CONTENEDOR PRINCIPAL DE PELÍCULA */}
+      {/* 🔹 CONTENEDOR PRINCIPAL DE PELÍCULA */}
       <div className="PeliculaBG container mt-3">
         <div className="row">
           {/* Imagen + Botón Reseña */}
           <div className="col-lg-3 pt-3">
             <div className="d-flex align-items-center justify-content-center flex-column">
               <img
-                src=""
+                src="https://via.placeholder.com/300x450?text=Poster+Pelicula"
                 className="imgpelicula card-img-top border border-white"
-                alt="Imagen de la película FNAF"
+                alt="Imagen de la película"
               />
 
               <div className="text-center mt-3 w-100">
@@ -56,20 +51,19 @@ const PeliculaPantalla: React.FC = () => {
           <div className="col-lg-9 mt-4 mb-3 ContenedorSinopsis">
             <div className="row align-items-center">
               <div className="col-lg-6 text-center text-light">
-                <h2 id="TituloPelicula"></h2>
+                <h2 id="TituloPelicula">Título de Ejemplo</h2>
               </div>
 
-              <div
-                className="col-lg-3 estrellas text-center"
-                data-calificacion=""
-              ></div>
+              <div className="col-lg-3 estrellas text-center" data-calificacion="">
+                ⭐⭐⭐⭐☆
+              </div>
 
               <div className="col-lg-3 text-center">
                 <div className="row d-flex align-items-center text-center">
                   <div id="Favoritos" className="col-lg-6">
                     <img
                       className="Iconos2"
-                      src="img/Favoritos.png"
+                      src="/img/Favoritos.png"
                       alt="Ícono Favorita"
                     />
                     <div className="text-light mb-0 mt-2 h6">Favorita</div>
@@ -77,7 +71,7 @@ const PeliculaPantalla: React.FC = () => {
                   <div id="Visto" className="col-lg-6">
                     <img
                       className="Iconos2"
-                      src="img/Visto.png"
+                      src="/img/Visto.png"
                       alt="Ícono Vista"
                     />
                     <div className="text-light mb-0 mt-2 h6">Vista</div>
@@ -93,7 +87,9 @@ const PeliculaPantalla: React.FC = () => {
                 <div
                   className="text-light p-2 text-justify"
                   id="Sinopsis"
-                ></div>
+                >
+                  Aquí iría la sinopsis de la película. Puedes rellenarla con datos desde una API o archivo JSON.
+                </div>
               </div>
             </div>
           </div>
@@ -103,43 +99,31 @@ const PeliculaPantalla: React.FC = () => {
             <div className="mt-3 text-center">
               <h2 className="text-center text-light">Datos Generales</h2>
               <div className="table-responsive">
-                <table className="table table-bordered">
+                <table className="table table-bordered text-light">
                   <tbody>
                     <tr>
-                      <th scope="row" className="text-light">
-                        Presupuesto
-                      </th>
-                      <td className="text-light" id="Presupuesto"></td>
+                      <th>Presupuesto</th>
+                      <td>$30,000,000</td>
                     </tr>
                     <tr>
-                      <th scope="row" className="text-light">
-                        Recaudación
-                      </th>
-                      <td className="text-light" id="Recaudacion"></td>
+                      <th>Recaudación</th>
+                      <td>$200,000,000</td>
                     </tr>
                     <tr>
-                      <th scope="row" className="text-light">
-                        Duración
-                      </th>
-                      <td className="text-light" id="Duracion"></td>
+                      <th>Duración</th>
+                      <td>2h 15min</td>
                     </tr>
                     <tr>
-                      <th scope="row" className="text-light">
-                        Año de Estreno
-                      </th>
-                      <td className="text-light" id="AñoEstreno"></td>
+                      <th>Año de Estreno</th>
+                      <td>2023</td>
                     </tr>
                     <tr>
-                      <th scope="row" className="text-light">
-                        Género
-                      </th>
-                      <td className="text-light" id="Generos"></td>
+                      <th>Género</th>
+                      <td>Terror, Suspenso</td>
                     </tr>
                     <tr>
-                      <th scope="row" className="text-light">
-                        Clasificación
-                      </th>
-                      <td className="text-light" id="Clasificacion"></td>
+                      <th>Clasificación</th>
+                      <td>B15</td>
                     </tr>
                   </tbody>
                 </table>
@@ -149,60 +133,44 @@ const PeliculaPantalla: React.FC = () => {
         </div>
       </div>
 
-      {/* ACTORES */}
+      {/* 🔹 ACTORES */}
       <div className="container">
-        <div className="row">
-          <div className="col">
-            <div className="row text-light py-3">
-              <div className="col">
-                <h3 className="text-center">ACTORES</h3>
-              </div>
-            </div>
-
-            <div className="container">
-              <div className="row ContenedorActores">
-                {/* Tarjetas de actores */}
-              </div>
-            </div>
+        <h3 className="text-center text-light py-3">ACTORES</h3>
+        <div className="row ContenedorActores text-light">
+          <div className="col-md-3 text-center">
+            <img
+              src="https://via.placeholder.com/150"
+              alt="Actor"
+              className="rounded-circle mb-2"
+            />
+            <p>Josh Hutcherson</p>
           </div>
-        </div>
-      </div>
-
-      {/* DIRECTOR Y EQUIPO */}
-      <div className="container">
-        <div className="row">
-          <div className="col">
-            <div className="row text-light py-3">
-              <div className="col">
-                <h3 className="text-center">DIRECTOR Y OTRAS PERSONAS</h3>
-              </div>
-            </div>
-
-            <div className="container">
-              <div className="row ContenedorDirectores">
-                {/* Tarjetas de directores */}
-              </div>
-            </div>
+          <div className="col-md-3 text-center">
+            <img
+              src="https://via.placeholder.com/150"
+              alt="Actor"
+              className="rounded-circle mb-2"
+            />
+            <p>Elizabeth Lail</p>
           </div>
         </div>
       </div>
 
       <hr />
 
-      {/* RESEÑAS DE USUARIOS */}
-      <div>
-        <div className="row text-light py-3">
-          <div className="col">
-            <h3 className="text-right">RESEÑAS DE USUARIOS NORMALES</h3>
-          </div>
-        </div>
-
+      {/* 🔹 RESEÑAS */}
+      <div className="container text-light">
+        <h3 className="text-center py-3">Reseñas de Usuarios</h3>
         <div id="ContenedorReseñas">
-          <div className="container Reseña">{/* Reseñas */}</div>
+          <div className="card bg-dark text-light mb-3 p-3">
+            <h5>@Usuario123</h5>
+            <p>Excelente película, muy fiel al juego original.</p>
+            <p>⭐⭐⭐⭐⭐</p>
+          </div>
         </div>
       </div>
 
-      {/* MODAL RESEÑA */}
+      {/* 🔹 MODAL RESEÑA */}
       <div
         className="modal fade"
         id="modalResena"
@@ -225,7 +193,6 @@ const PeliculaPantalla: React.FC = () => {
             </div>
             <div className="modal-body">
               <form id="formResena">
-                <div className="mb-3 contenedornickname"></div>
                 <div className="mb-3">
                   <label htmlFor="calificacion" className="form-label">
                     Calificación
@@ -262,61 +229,9 @@ const PeliculaPantalla: React.FC = () => {
               <button
                 type="button"
                 className="btn btn-primary"
-                id="guardarResena"
                 data-bs-dismiss="modal"
               >
                 Guardar
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* MODAL ERROR */}
-      <div
-        className="modal fade"
-        id="errorModal"
-        tabIndex={-1}
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="exampleModalLabel">
-                Notificar Error
-              </h5>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div className="modal-body">
-              <form>
-                <div className="mb-3">
-                  <label htmlFor="mensajeError" className="form-label">
-                    Mensaje de Error
-                  </label>
-                  <textarea
-                    className="form-control"
-                    id="mensajeError"
-                    rows={3}
-                  ></textarea>
-                </div>
-              </form>
-            </div>
-            <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Cerrar
-              </button>
-              <button type="button" className="btn btn-primary" id="enviarError">
-                Enviar
               </button>
             </div>
           </div>

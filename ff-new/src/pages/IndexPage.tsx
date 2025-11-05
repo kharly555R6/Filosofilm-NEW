@@ -4,6 +4,7 @@ import logo from "../assets/img/logo.png";
 import logoFN from "../assets/img/logoFN.jpg";
 
 import NavbarOut from "../components/NavbarOut";
+
 import FormIS from "../components/FormIniciarSesion";
 import FormR from "../components/FormRegistrarse";
 import QueEsFF from "../components/QueEsFF";
