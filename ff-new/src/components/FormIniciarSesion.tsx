@@ -41,7 +41,7 @@ const FormIS: React.FC = () => {
         <div className="d-grid">
           <button
             type="submit"
-            className="btn btn-dark font-weight-bold w-100"
+            className="btn font-weight-bold w-100 buttonIS"
           >
             Iniciar sesión
           </button>

@@ -4,8 +4,9 @@ import logo from '../assets/img/logo.png';
 
 const AdminPanel: React.FC = () => {
   return (
-    <div className="admin-page-body">
-      <div className="container">
+
+    <div>
+      <div className="container adminPageBody">
         <div className="row text-center">
           <div className="col p-3">
             <div className="p-2">
@@ -20,8 +21,10 @@ const AdminPanel: React.FC = () => {
         </div>
       </div>
 
+      <br /><hr /><br />
+
       {/* Panel principal */}
-      <div id="Panel" className="container bg-warning py-4">
+      <div className="container bg-warning py-4 rounded">
         <h1 className="text-center mb-4">Panel de Administración</h1>
 
         <div className="row justify-content-center">
@@ -53,7 +56,7 @@ const AdminPanel: React.FC = () => {
                   href="/"
                   className="bg-dark list-group-item list-group-item-action mb-3 text-center text-light"
                 >
-                  INICIO
+                  Cerrar Sesión
                 </a>
               </div>
 

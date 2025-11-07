@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import logo from "../assets/img/logo.png";
+import "../styles/Pages/Administrador.css";
 
 interface Usuario {
   idUsuario: string;
@@ -64,34 +66,66 @@ const CRUDUsuarios: React.FC = () => {
   };
 
   return (
-    <div className="container my-5">
-      {/* Logo */}
-      <div className="row text-center">
-        <div className="col p-5">
-          <img id="LogoFilosofilm" src="img/logo.png" className="img-fluid" alt="Logo Filosofilm" />
+    <div>
+      <div className="container adminPageBody">
+        <div className="row text-center">
+          <div className="col p-3">
+            <div className="p-2">
+              <img
+                id="LogoFilosofilm"
+                src={logo}
+                alt="Logo Filosofilm"
+                className="img-fluid logo-admin"
+              />
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Lista de usuarios */}
-      <div className="container my-5 bg-warning p-4 rounded">
-        <h1 className="text-center mb-4">CRUD de Usuarios</h1>
-        <div className="row">
+      <br />
+      <hr />
+      <br />
+
+      <div className="container bg-warning py-4 rounded">
+        
+        <h1 className="text-center">
+          CRUD de Usuarios
+        </h1>
+
+        <div className="row ml-1">
           {usuarios.map((usuario) => (
-            <div key={usuario.idUsuario} className="col-md-4 mb-3">
-              <div className="card">
-                <div className="card-body">
-                  <h5 className="card-title">{usuario.nickname}</h5>
-                  <p className="card-text">{usuario.correoUsuario}</p>
-                  <button className="btn btn-primary mr-2" onClick={() => abrirDetalle(usuario)}>Ver Detalles</button>
-                  <button className="btn btn-secondary" onClick={() => abrirRoles(usuario)}>Cambiar Rol</button>
+            <div key={usuario.idUsuario} className="col-4">
+              <div className="userCard">
+                <div className="card-body text-center">
+                  <h5 className="card-title User">{usuario.nickname}</h5>
+                  <p className="card-text User">{usuario.correoUsuario}</p>
+                  <div
+                    className="Container d-flex justify-content-center"
+                    style={{ gap: "25px" }}
+                  >
+                    <button className="crudBtn" onClick={() => abrirDetalle(usuario)}>
+                      Detalles
+                    </button>
+                    <button className="crudBtn" onClick={() => abrirRoles(usuario)}>
+                      Rol
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           ))}
         </div>
+
+        <div className="col-12">
+          <a
+            href="Administrador"
+            className="bg-dark list-group-item list-group-item-action mb-3 text-center text-light"
+          >
+            REGRESAR
+          </a>
+        </div>
       </div>
 
-      {/* Modal de detalles */}
       {showDetalle && usuarioSeleccionado && (
         <div className="modal d-block" tabIndex={-1} role="dialog">
           <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -123,14 +157,15 @@ const CRUDUsuarios: React.FC = () => {
                 </div>
               </div>
               <div className="modal-footer">
-                <button className="btn btn-secondary" onClick={cerrarDetalle}>Cerrar</button>
+                <button className="btn btn-secondary" onClick={cerrarDetalle}>
+                  Cerrar
+                </button>
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Modal de roles */}
       {showRoles && usuarioSeleccionado && (
         <div className="modal d-block" tabIndex={-1} role="dialog">
           <div className="modal-dialog modal-dialog-centered" role="document">
@@ -144,7 +179,11 @@ const CRUDUsuarios: React.FC = () => {
                 </button>
               </div>
               <div className="modal-body">
-                <select className="form-control" value={rolSeleccionado} onChange={(e) => setRolSeleccionado(e.target.value)}>
+                <select
+                  className="form-control"
+                  value={rolSeleccionado}
+                  onChange={(e) => setRolSeleccionado(e.target.value)}
+                >
                   <option value="">Seleccionar rol</option>
                   <option value="Admin">Admin</option>
                   <option value="Usuario">Usuario</option>
@@ -152,18 +191,17 @@ const CRUDUsuarios: React.FC = () => {
                 </select>
               </div>
               <div className="modal-footer">
-                <button className="btn btn-secondary" onClick={cerrarRoles}>Cerrar</button>
-                <button className="btn btn-primary" onClick={cambiarRol}>Cambiar Rol</button>
+                <button className="btn btn-secondary" onClick={cerrarRoles}>
+                  Cerrar
+                </button>
+                <button className="btn btn-primary" onClick={cambiarRol}>
+                  Cambiar Rol
+                </button>
               </div>
             </div>
           </div>
         </div>
       )}
-
-      {/* Botón volver */}
-      <div className="d-flex justify-content-center align-items-center mt-3">
-        <a href="/Admin" className="btn btn-secondary">Ir a Pantalla Admin</a>
-      </div>
     </div>
   );
 };

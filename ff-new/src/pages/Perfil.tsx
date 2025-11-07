@@ -30,26 +30,37 @@ const Perfil: React.FC = () => {
       {/* 🔹 Navbar inferior */}
       <div className="bg-secondary">
         <ul className="nav nav-pills nav-fill">
-          <li className="nav-item bgactivo">
-            <a className="nav-link" href="/Perfil">
-              Actividad
-            </a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link" href="/MisResenas">
-              Mis Reseñas
-            </a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link" href="/MisLikes">
-              Likes
-            </a>
-          </li>
+
           <li className="nav-item">
             <a className="nav-link" href="/MiInformacion">
               Información
             </a>
           </li>
+          
+          <li className="nav-item bgactivo">
+            <a className="nav-link" href="/Perfil">
+              Actividad
+            </a>
+          </li>
+
+          <li className="nav-item">
+            <a className="nav-link" href="/MisResenas">
+              Mis Reseñas
+            </a>
+          </li>
+
+          <li className="nav-item">
+            <a className="nav-link" href="/MisLikes">
+              Likes
+            </a>
+          </li>
+
+          <li className="nav-item">
+            <a className="nav-link" href="/MiInformacion">
+              Información
+            </a>
+          </li>
+
         </ul>
       </div>
 

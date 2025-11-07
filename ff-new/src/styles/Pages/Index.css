@@ -85,8 +85,19 @@ h2{
     margin: -40px 10px 10px 0;
 }
 
-button{
+.buttonIS{
     margin: -30px;
+    background-image: url(../../assets/img/fondoLogo.png);
+    color: #fff;
+}
+
+.buttonRS{
+    font-weight: 600;
+}
+
+.buttonIS:hover,.buttonRS:hover{
+    background-color: #2C1810;
+    color: #FFD700;
 }
 
 .frase-div {

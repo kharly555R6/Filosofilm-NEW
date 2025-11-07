@@ -1,6 +1,5 @@
 import React from "react";
 import "../styles/Components/Navbar.css";
-import { color } from "framer-motion";
 
 interface NavbarInProps {
   onPerfilClick?: () => void;
@@ -13,7 +12,6 @@ const NavbarIn: React.FC<NavbarInProps> = ({
   onPerfilClick,
   onInicioClick,
   onLogoutClick,
-  onPeliculasClick,
 }) => {
   return (
     <nav className="navbarout-bg">
@@ -39,16 +37,6 @@ const NavbarIn: React.FC<NavbarInProps> = ({
             onClick={onInicioClick}
           >
             <strong>Inicio</strong>
-          </a>
-        </li>
-
-        <li className="navbarout-item">
-          <a
-            className="navbarout-link"
-            style={{ cursor: "pointer" }}
-            onClick={onPeliculasClick}
-          >
-            <strong>Peliculas</strong>
           </a>
         </li>
 

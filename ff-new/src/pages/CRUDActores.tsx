@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import sample from '../assets/sample.svg';
+import logo from "../assets/img/logo.png";
+import '../styles/Pages/Administrador.css';
 
 const CRUDActores: React.FC = () => {
   // Estados simulados (estos normalmente se cargarían con un backend o API)
@@ -25,27 +26,29 @@ const CRUDActores: React.FC = () => {
   };
 
   return (
-    <div className="crud-container">
-      {/* Logo */}
-      <div className="container">
+    <div>
+      <div className="container adminPageBody">
         <div className="row text-center">
-          <div className="col p-5">
+          <div className="col p-3">
             <div className="p-2">
               <img
                 id="LogoFilosofilm"
-                src="img/logo.png"
+                src={logo}
                 alt="Logo Filosofilm"
-                className="img-fluid"
+                className="img-fluid logo-admin"
               />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Formulario principal */}
-      <div className="container my-5 bg-warning p-4 rounded">
+      <br />
+      <hr />
+      <br />
+
+      <div className="container bg-warning p-4 rounded">
         <h1 className="text-center mb-4">
-          <strong>CRUD de Actores</strong>
+          CRUD de Actores
         </h1>
 
         <form onSubmit={handleAgregar}>
@@ -100,8 +103,10 @@ const CRUDActores: React.FC = () => {
           </div>
 
           <div className="form-group text-center">
-            <button type="submit" className="btn btn-secondary mr-2">
-              Agregar
+            <button 
+              type="submit" 
+              className="bg-dark list-group-item list-group-item-action mb-3 text-center text-light">
+              AGREGAR
             </button>
           </div>
         </form>
@@ -119,13 +124,16 @@ const CRUDActores: React.FC = () => {
             </li>
           ))}
         </ul>
-      </div>
 
-      {/* Enlace al admin */}
-      <div className="d-flex justify-content-center align-items-center">
-        <a href="/Admin" className="btn btn-secondary mb-3">
-          Ir a Pantalla Admin
-        </a>
+        <div className="col-12">
+          <a
+            href="Administrador"
+            className="bg-dark list-group-item list-group-item-action mb-3 text-center text-light"
+          >
+            REGRESAR
+          </a>
+        </div>
+        
       </div>
     </div>
   );

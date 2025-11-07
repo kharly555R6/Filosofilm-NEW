@@ -1,19 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavbarIn from "../components/NavbarIn";
+import "../styles/Pages/InicioPelicula.css";
+import sample from "../assets/sample.svg";
+import actor from "../assets/img/Elizabeth_Lail.jpg";
+import visto0 from "../assets/img/visto0.png";
+import visto1 from "../assets/img/visto1.png";
+import Fav0 from "../assets/img/Like0.png";
+import Fav1 from "../assets/img/Like1.png";
 
 const PeliculaPantalla: React.FC = () => {
   const navigate = useNavigate();
 
-  // 🔹 Funciones de navegación para el Navbar
   const handleInicio = () => navigate("/InicioDelUsuario");
   const handlePeliculas = () => navigate("/InicioPelicula");
-  const handlePerfil = () => navigate("/Perfil");
+  const handlePerfil = () => navigate("/MiInformacion");
   const handleLogout = () => navigate("/");
+
+  const [favorito, setFavorito] = useState(false);
+  const [visto, setVisto] = useState(false);
+
+  const toggleFavorito = () => setFavorito(!favorito);
+  const toggleVisto = () => setVisto(!visto);
 
   return (
     <div>
-      {/* 🔹 Navbar funcional */}
       <NavbarIn
         onInicioClick={handleInicio}
         onPeliculasClick={handlePeliculas}
@@ -21,25 +32,18 @@ const PeliculaPantalla: React.FC = () => {
         onLogoutClick={handleLogout}
       />
 
-      {/* 🔹 CONTENEDOR PRINCIPAL DE PELÍCULA */}
-      <div className="PeliculaBG container mt-3">
-        <div className="row">
-          {/* Imagen + Botón Reseña */}
-          <div className="col-lg-3 pt-3">
-            <div className="d-flex align-items-center justify-content-center flex-column">
-              <img
-                src="https://via.placeholder.com/300x450?text=Poster+Pelicula"
-                className="imgpelicula card-img-top border border-white"
-                alt="Imagen de la película"
-              />
+      <div className="PeliculaBG container mt-4">
+        <div className="row justify-content-center">
 
-              <div className="text-center mt-3 w-100">
+          <div className="col-5 my-5">
+            <div className="d-flex align-items-center justify-content-center flex-column">
+              <img src={sample} className="imgPeli my-1" alt="Imagen de la película" />
+              <div className="text-center mt-3">
                 <button
                   type="button"
                   data-bs-toggle="modal"
                   data-bs-target="#modalResena"
-                  className="btn btn-primary BotonResena"
-                  id="botonHacerResena"
+                  className="btn btn-warning BTNRES"
                 >
                   Hacer Reseña
                 </button>
@@ -47,57 +51,80 @@ const PeliculaPantalla: React.FC = () => {
             </div>
           </div>
 
-          {/* Sinopsis y Datos */}
-          <div className="col-lg-9 mt-4 mb-3 ContenedorSinopsis">
+          <div className="col-1"></div>
+
+          <div className="col-5 ContenedorSinopsis">
             <div className="row align-items-center">
-              <div className="col-lg-6 text-center text-light">
-                <h2 id="TituloPelicula">Título de Ejemplo</h2>
+              <div className="col-12 text-center">
+                <h2>Título de Ejemplo</h2>
               </div>
 
-              <div className="col-lg-3 estrellas text-center" data-calificacion="">
-                ⭐⭐⭐⭐☆
+              <div className="col-lg-12 estrellas text-center" data-calificacion="">
+                ☆☆☆☆☆
               </div>
 
-              <div className="col-lg-3 text-center">
+              <div className="col-lg-12 text-center IconosDiv">
                 <div className="row d-flex align-items-center text-center">
-                  <div id="Favoritos" className="col-lg-6">
+                  <div
+                    className="col-lg-6"
+                    onClick={toggleFavorito}
+                    style={{ cursor: "pointer" }}
+                  >
                     <img
-                      className="Iconos2"
-                      src="/img/Favoritos.png"
+                      className="Iconos"
+                      src={favorito ? Fav1 : Fav0}
                       alt="Ícono Favorita"
                     />
-                    <div className="text-light mb-0 mt-2 h6">Favorita</div>
+                    <div>Favorita</div>
                   </div>
-                  <div id="Visto" className="col-lg-6">
+
+                  <div
+                    id="Visto"
+                    className="col-lg-6"
+                    onClick={toggleVisto}
+                    style={{ cursor: "pointer" }}
+                  >
                     <img
-                      className="Iconos2"
-                      src="/img/Visto.png"
+                      className="Iconos"
+                      src={visto ? visto1 : visto0}
                       alt="Ícono Vista"
                     />
-                    <div className="text-light mb-0 mt-2 h6">Vista</div>
+                    <div>Vista</div>
                   </div>
                 </div>
               </div>
+
             </div>
 
             <hr />
 
             <div className="row">
               <div className="col-12 d-flex align-items-center">
-                <div
-                  className="text-light p-2 text-justify"
-                  id="Sinopsis"
-                >
-                  Aquí iría la sinopsis de la película. Puedes rellenarla con datos desde una API o archivo JSON.
+                <div className="p-2 text-justify">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Architecto ex consequuntur voluptatum soluta ullam dolorum,
+                  recusandae consectetur suscipit dolorem tempore laudantium
+                  culpa sequi sunt eligendi! Modi numquam hic iure unde, eos
+                  dicta accusantium, doloremque non enim in nesciunt beatae
+                  veniam quibusdam corporis quaerat laboriosam pariatur,
+                  est aliquid qui possimus culpa sit. Ullam odio iste tempore
+                  possimus. Dicta, a! Rerum, assumenda.
                 </div>
               </div>
             </div>
           </div>
+        </div>
 
-          {/* Tabla de datos */}
-          <div className="col-12">
+        <br /><hr />
+
+        <div className="row">
+          <div className="col-1"></div>
+
+          <div className="col-10 tablaDatos">
             <div className="mt-3 text-center">
-              <h2 className="text-center text-light">Datos Generales</h2>
+              <h2 className="text-center text-light DG DGM">Datos Generales</h2>
+
+              <div className="my-3"></div>
               <div className="table-responsive">
                 <table className="table table-bordered text-light">
                   <tbody>
@@ -133,44 +160,37 @@ const PeliculaPantalla: React.FC = () => {
         </div>
       </div>
 
-      {/* 🔹 ACTORES */}
-      <div className="container">
-        <h3 className="text-center text-light py-3">ACTORES</h3>
+      <div className="container text-center">
+        <h2 className="text-light py-3 DG">ACTORES</h2>
         <div className="row ContenedorActores text-light">
-          <div className="col-md-3 text-center">
-            <img
-              src="https://via.placeholder.com/150"
-              alt="Actor"
-              className="rounded-circle mb-2"
-            />
-            <p>Josh Hutcherson</p>
-          </div>
-          <div className="col-md-3 text-center">
-            <img
-              src="https://via.placeholder.com/150"
-              alt="Actor"
-              className="rounded-circle mb-2"
-            />
-            <p>Elizabeth Lail</p>
-          </div>
+          {[1, 2, 3].map((i) => (
+            <div className="col-md-4 text-center" key={i}>
+              <img src={actor} alt="Actor" className="rounded-circle mb-4 actorImage" />
+              <h4>@actor</h4>
+            </div>
+          ))}
         </div>
       </div>
 
       <hr />
 
-      {/* 🔹 RESEÑAS */}
       <div className="container text-light">
-        <h3 className="text-center py-3">Reseñas de Usuarios</h3>
+        <h2 className="text-center py-3 DG">Reseñas de Usuarios</h2>
         <div id="ContenedorReseñas">
-          <div className="card bg-dark text-light mb-3 p-3">
-            <h5>@Usuario123</h5>
-            <p>Excelente película, muy fiel al juego original.</p>
+          <div className="card bg-dark text-light mb-3 p-4 text-justify">
+            <h4>@UsuarioRandom</h4>
+            <br />
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+              Cum ex labore ab minima est accusamus error, animi tenetur 
+              soluta aspernatur officia quisquam. Magni consectetur iusto 
+              facere, temporibus quod eum quisquam nobis sapiente voluptatibus 
+              tempora accusantium praesentium qui itaque voluptates, provident 
+              ipsam quos consequatur illo amet!</p>
             <p>⭐⭐⭐⭐⭐</p>
           </div>
         </div>
       </div>
 
-      {/* 🔹 MODAL RESEÑA */}
       <div
         className="modal fade"
         id="modalResena"

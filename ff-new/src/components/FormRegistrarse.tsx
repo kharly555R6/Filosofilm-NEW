@@ -108,7 +108,7 @@ const FormR: React.FC<FormRProps> = ({ onBack }) => {
             </div>
 
             <div className="text-center mt-3">
-              <button type="submit" className="btn btn-warning w-100 fw-bold">
+              <button type="submit" className="btn btn-warning w-100 buttonRS">
                 Registrarse
               </button>
             </div>

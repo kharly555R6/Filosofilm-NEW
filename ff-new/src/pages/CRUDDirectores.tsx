@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import logo from "../assets/img/logo.png";
+import '../styles/Pages/Administrador.css';
+
 
 interface Director {
   id: number;
@@ -63,21 +66,29 @@ const CRUDDirectores: React.FC = () => {
 
   return (
     <div>
-      {/* Logo */}
-      <div className="container">
+
+      <div className="container adminPageBody">
         <div className="row text-center">
-          <div className="col p-5">
+          <div className="col p-3">
             <div className="p-2">
-              <img id="LogoFilosofilm" src="img/logo.png" alt="Logo" className="img-fluid" />
+              <img
+                id="LogoFilosofilm"
+                src={logo}
+                alt="Logo Filosofilm"
+                className="img-fluid logo-admin"
+              />
             </div>
           </div>
         </div>
       </div>
 
-      {/* CRUD principal */}
-      <div className="container my-5 bg-warning p-4 rounded">
+      <br />
+      <hr />
+      <br />
+
+      <div className="container bg-warning py-4 p-4 rounded">
         <h1 className="text-center mb-4">
-          <strong>CRUD de Directores</strong>
+          CRUD de Directores
         </h1>
 
         <form onSubmit={handleSubmit}>
@@ -178,13 +189,16 @@ const CRUDDirectores: React.FC = () => {
             </li>
           )}
         </ul>
-      </div>
 
-      {/* Enlace al admin */}
-      <div className="d-flex justify-content-center align-items-center">
-        <a href="/Administrador" className="btn btn-secondary mb-3">
-          Ir a Pantalla Admin
-        </a>
+        <div className="col-12 mt-4">
+          <a
+            href="Administrador"
+            className="bg-dark list-group-item list-group-item-action mb-3 text-center text-light"
+          >
+            REGRESAR
+          </a>
+        </div>
+
       </div>
     </div>
   );

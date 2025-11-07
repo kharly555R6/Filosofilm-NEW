@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import logo from "../assets/img/logo.png";
+import '../styles/Pages/Administrador.css';
+
 
 const CRUDPaises: React.FC = () => {
   const [nombrePais, setNombrePais] = useState("");
@@ -38,24 +41,34 @@ const CRUDPaises: React.FC = () => {
   };
 
   return (
-    <div className="container my-5">
-      {/* Logo */}
-      <div className="row text-center">
-        <div className="col p-5">
-          <div className="p-2">
-            <img id="LogoFilosofilm" src="img/logo.png" className="img-fluid" alt="Logo Filosofilm" />
+    <div>
+      
+      <div className="container adminPageBody">
+        <div className="row text-center">
+          <div className="col p-3">
+            <div className="p-2">
+              <img
+                id="LogoFilosofilm"
+                src={logo}
+                alt="Logo Filosofilm"
+                className="img-fluid logo-admin"
+              />
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Formulario */}
-      <div className="container my-5 bg-warning p-4 rounded">
+      <br />
+      <hr />
+      <br />
+
+      <div className="container bg-warning py-4 p-4 rounded">
         <h1 className="text-center mb-4">
-          <strong>CRUD de Países</strong>
+          CRUD de Países
         </h1>
 
         <form onSubmit={agregarPais}>
-          <div className="form-group">
+          <div className="form-group mt-4">
             <label htmlFor="nombrePais" className="form-label">
               Nombre del País
             </label>
@@ -69,8 +82,8 @@ const CRUDPaises: React.FC = () => {
             />
           </div>
 
-          <div className="form-group text-center mt-3">
-            <button type="submit" className="btn btn-secondary mr-2">
+          <div className="form-group text-center">
+            <button type="submit" className="btn btn-secondary">
               {modoEditar ? "Actualizar" : "Agregar"}
             </button>
             {modoEditar && (
@@ -118,13 +131,16 @@ const CRUDPaises: React.FC = () => {
             ))
           )}
         </div>
-      </div>
 
-      {/* Botón volver */}
-      <div className="d-flex justify-content-center align-items-center">
-        <a href="/Admin" className="btn btn-secondary mb-3">
-          Ir a Pantalla Admin
-        </a>
+        <div className="col-12">
+          <a
+            href="Administrador"
+            className="bg-dark list-group-item list-group-item-action mb-3 text-center text-light"
+          >
+            REGRESAR
+          </a>
+        </div>
+
       </div>
     </div>
   );
