@@ -1,19 +1,29 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import NavbarIn from "../components/NavbarIn";
+import NavbarInInferior from "../components/NavbarInInferior";
 
 const Perfil: React.FC = () => {
-  const navigate = useNavigate(); // 🔹 Hook necesario para redirigir
+  const navigate = useNavigate(); // ✅ Hook necesario para redirigir
 
-  // 🔹 Funciones de navegación para el Navbar
+  // 🔹 Funciones de navegación para el Navbar superior
   const handleInicio = () => navigate("/InicioDelUsuario");
   const handlePeliculas = () => navigate("/InicioPelicula");
   const handlePerfil = () => navigate("/Perfil");
-  const handleLogout = () => navigate("/");
+  const handleLogout = () => {
+    alert("Sesión cerrada");
+    navigate("/");
+  };
+
+  // 🔹 Funciones para la Navbar inferior
+  const handleInformacion = () => navigate("/MiInformacion");
+  const handleActividad = () => navigate("/Perfil");
+  const handleResenas = () => navigate("/MisResenas");
+  const handleLikes = () => navigate("/MisLikes");
+  const handleConfig = () => navigate("/Configuracion");
 
   useEffect(() => {
-    // Aquí puedes agregar la lógica de js/Perfil.js
-    // Ejemplo de futura integración:
+    // Aquí puedes agregar la lógica de perfil dinámico, por ejemplo:
     // fetch('/api/favoritos').then(res => res.json()).then(data => setFavoritos(data));
   }, []);
 
@@ -27,53 +37,27 @@ const Perfil: React.FC = () => {
         onLogoutClick={handleLogout}
       />
 
-      {/* 🔹 Navbar inferior */}
-      <div className="bg-secondary">
-        <ul className="nav nav-pills nav-fill">
+      <hr />
 
-          <li className="nav-item">
-            <a className="nav-link" href="/MiInformacion">
-              Información
-            </a>
-          </li>
-          
-          <li className="nav-item bgactivo">
-            <a className="nav-link" href="/Perfil">
-              Actividad
-            </a>
-          </li>
-
-          <li className="nav-item">
-            <a className="nav-link" href="/MisResenas">
-              Mis Reseñas
-            </a>
-          </li>
-
-          <li className="nav-item">
-            <a className="nav-link" href="/MisLikes">
-              Likes
-            </a>
-          </li>
-
-          <li className="nav-item">
-            <a className="nav-link" href="/MiInformacion">
-              Información
-            </a>
-          </li>
-
-        </ul>
-      </div>
+      {/* 🔸 Navbar inferior habilitada */}
+      <NavbarInInferior
+        onInformacionClick={handleInformacion}
+        onActividadClick={handleActividad}
+        onResenasClick={handleResenas}
+        onLikesClick={handleLikes}
+        onConfigClick={handleConfig}
+      />
 
       {/* 🔹 Contenido principal */}
       <div id="ContenedorPrincipal">
         <div className="container">
+          {/* FAVORITOS */}
           <div className="row text-light py-3">
             <div className="col">
               <h3>Favoritos</h3>
             </div>
           </div>
 
-          {/* Contenedor de favoritos */}
           <div id="ContenedorFavoritos" className="row">
             {/* Aquí podrías renderizar tus películas favoritas */}
             {/* Ejemplo:
@@ -86,11 +70,12 @@ const Perfil: React.FC = () => {
                     </div>
                   </div>
                 </div>
-              ))}
+              ))} 
             */}
           </div>
         </div>
 
+        {/* VISTAS RECIENTES */}
         <div className="container">
           <div className="row text-light py-3">
             <div className="col">
@@ -98,7 +83,6 @@ const Perfil: React.FC = () => {
             </div>
           </div>
 
-          {/* Contenedor de vistas recientes */}
           <div id="ContenedorVistasRecientes" className="row">
             {/* Aquí puedes renderizar dinámicamente tus vistas recientes */}
           </div>

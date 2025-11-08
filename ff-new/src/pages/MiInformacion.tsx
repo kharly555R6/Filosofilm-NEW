@@ -1,112 +1,102 @@
 import React from "react";
-
+import { useNavigate } from "react-router-dom";
 import NavbarIn from "../components/NavbarIn";
-
+import NavbarInInferior from "../components/NavbarInInferior";
+import '../styles/Pages/MiInformacion.css';
 
 const Perfil: React.FC = () => {
+  const navigate = useNavigate();
+
+  // 🔹 Funciones para Navbar superior
+  const handleInicio = () => navigate("/InicioDelUsuario");
+  const handlePeliculas = () => navigate("/InicioPelicula");
+  const handlePerfil = () => navigate("/Perfil");
+  const handleLogout = () => {
+    alert("Sesión cerrada");
+    navigate("/");
+  };
+
+  // 🔹 Funciones para Navbar inferior
+  const handleInformacion = () => navigate("/MiInformacion");
+  const handleActividad = () => navigate("/Perfil");
+  const handleResenas = () => navigate("/MisResenas");
+  const handleLikes = () => navigate("/MisLikes");
+  const handleConfig = () => navigate("/Configuracion");
+
   return (
     <div>
-      
-      <NavbarIn />
+      {/* 🔹 Navbar superior */}
+      <NavbarIn
+        onInicioClick={handleInicio}
+        onPeliculasClick={handlePeliculas}
+        onPerfilClick={handlePerfil}
+        onLogoutClick={handleLogout}
+      />
 
-      {/* SUBNAV DE PERFIL */}
-      <div className="bg-secondary">
-        <ul className="nav nav-pills nav-fill">
-          <li className="nav-item">
-            <a className="nav-link" href="/Perfil">
-              Actividad
-            </a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link" href="/MisResenas">
-              Mis Reseñas
-            </a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link" href="/MisLikes">
-              Likes
-            </a>
-          </li>
-          <li className="nav-item bgactivo">
-            <a className="nav-link" href="/MiInformacion">
-              Información
-            </a>
-          </li>
-        </ul>
-      </div>
+      <hr />
 
-      {/* INFORMACIÓN DEL USUARIO */}
-      <div className="container mt-2 bg-dark text-white d-flex align-items-center justify-content-center">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-8 mx-auto bg-dark p-4 rounded shadow text-left">
-              <h2 className="text-center mb-4">Información del Usuario</h2>
+      {/* 🔹 Navbar inferior habilitada */}
+      <NavbarInInferior
+        onInformacionClick={handleInformacion}
+        onActividadClick={handleActividad}
+        onResenasClick={handleResenas}
+        onLikesClick={handleLikes}
+        onConfigClick={handleConfig}
+      />
 
-              <div className="form-group">
-                <label>Nickname:</label>
-                <span id="nombreVisualizacionSpan" className="ml-2"></span>
-              </div>
+      {/* 🔸 Información del usuario */}
+      <div className="miinfo-bg my-4 rounded">
+        <div className="miinfo-card">
+          <h2>Información del Usuario</h2>
+          <div className="miinfo-row">
+            <div className="miinfo-field">
+              <span className="miinfo-label">Nickname:</span>
+              <span id="nombreVisualizacionSpan" className="miinfo-value"></span>
+            </div>
 
-              <div className="form-group">
-                <label>ID_Rol:</label>
-                <span id="RolSpan" className="ml-2"></span>
-              </div>
+            <div className="miinfo-field">
+              <span className="miinfo-label">Nombre:</span>
+              <span id="nombreSpan" className="miinfo-value"></span>
+            </div>
 
-              <div className="form-group">
-                <label>Nombre:</label>
-                <span id="nombreSpan" className="ml-2"></span>
-              </div>
+            <div className="miinfo-field">
+              <span className="miinfo-label">Apellidos:</span>
+              <span id="Apellidos" className="miinfo-value"></span>
+            </div>
 
-              <div className="form-group">
-                <label>Apellidos:</label>
-                <span id="Apellidos" className="ml-2"></span>
-              </div>
+            <div className="miinfo-field">
+              <span className="miinfo-label">Correo Electrónico:</span>
+              <span id="correoElectronicoSpan" className="miinfo-value"></span>
+            </div>
 
-              <div className="form-group">
-                <label>Correo Electrónico:</label>
-                <span id="correoElectronicoSpan" className="ml-2"></span>
-              </div>
+            <div className="miinfo-field">
+              <span className="miinfo-label">Fecha de creación:</span>
+              <span id="fechacreacionSpan" className="miinfo-value"></span>
+            </div>
 
-              <div className="form-group">
-                <label>Fecha de creación:</label>
-                <span id="fechacreacionSpan" className="ml-2"></span>
-              </div>
+            <div className="miinfo-field">
+              <span className="miinfo-label">Descripción:</span>
+              <span id="DescripcionCampo" className="miinfo-value"></span>
+            </div>
 
-              <div className="form-group">
-                <label>
-                  Descripción:
-                  <span id="DescripcionCampo" className="ml-2"></span>
-                </label>
-              </div>
+            <div className="miinfo-field">
+              <span className="miinfo-label">Fecha de nacimiento:</span>
+              <span id="fechaNacimientoSpan" className="miinfo-value"></span>
+            </div>
 
-              <div className="form-group">
-                <label>
-                  Fecha de nacimiento:
-                  <span id="fechaNacimientoSpan" className="ml-2"></span>
-                </label>
-              </div>
+            <div className="miinfo-field">
+              <span className="miinfo-label">Género:</span>
+              <span id="generoSpan" className="miinfo-value"></span>
+            </div>
 
-              <div className="form-group">
-                <label>
-                  Género:
-                  <span id="generoSpan" className="ml-2"></span>
-                </label>
-              </div>
-
-              <div className="form-group">
-                <label>Fecha de registro:</label>
-                <span id="fechaRegistroSpan" className="ml-2"></span>
-              </div>
+            <div className="miinfo-field">
+              <span className="miinfo-label">Fecha de registro:</span>
+              <span id="fechaRegistroSpan" className="miinfo-value"></span>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* BOTÓN DE CONFIGURACIÓN */}
-      <div className="text-center my-3">
-        <a href="/Configuracion" className="btn btn-primary">
-          Ir a Configuración
-        </a>
+          <a href="/Configuracion" className="miinfo-back w-100 text-center">Editar</a>
+        </div>
       </div>
     </div>
   );

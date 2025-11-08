@@ -1,0 +1,112 @@
+.miinfo-bg{
+    background-image: url(../../assets/img/fondoLogo.png);
+    background-size: cover;
+    background-position: center;
+    padding: 3rem 1rem;
+    border: solid 8px #2C1810;
+}
+
+.miinfo-card{
+    max-width: 900px;
+    margin: 0 auto;
+    background: #fff;
+    color: #1A1A1A;
+    border: 6px solid #FFD700;
+    border-radius: 12px;
+    padding: 2.25rem;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.miinfo-card h2{
+    color: #2C1810;
+    font-size: 2rem;
+    margin-bottom: 1.25rem;
+    text-align: center;
+}
+
+.miinfo-row{
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.miinfo-label{
+    font-weight: 700;
+    color: #2C1810;
+    display: inline-block;
+    width: 180px;
+}
+
+.miinfo-value{
+    color: #111;
+}
+
+.miinfo-field{
+    background: #f8f9fa;
+    border: 1px solid #e9e9e9;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+}
+
+/* Back button */
+.miinfo-back{
+    display: inline-block;
+    margin-top: 1.5rem;
+    background: #1A1A1A;
+    color: #FFD700;
+    border: 2px solid #FFD700;
+    padding: 0.65rem 1.5rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: 0.2s;
+}
+
+.miinfo-back:hover{
+    background: #2C1810;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+@media (min-width: 768px){
+    .miinfo-row{
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    .miinfo-field{ width: calc(100% - 1rem); }
+}
+
+/* Inputs y textarea dentro de campos */
+.miinfo-field input,
+.miinfo-field textarea,
+.miinfo-field select {
+    width: 100%;
+    border: 2px solid #2C1810;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.miinfo-field textarea{ min-height: 100px; }
+
+/* Botón de envío estilizado similar al resto */
+.miinfo-submit{
+    display: inline-block;
+    margin-top: 1.25rem;
+    background: #1A1A1A;
+    color: #FFD700;
+    border: 3px solid #FFD700;
+    padding: 0.75rem 1.75rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 800;
+    width: 100%;
+    text-align: center;
+}
+
+.miinfo-submit:hover{
+    background: #2C1810;
+    color: #fff;
+    transform: translateY(-2px);
+}
