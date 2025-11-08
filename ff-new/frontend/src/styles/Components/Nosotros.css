@@ -1,0 +1,47 @@
+.nosotros-container {
+    padding: 40px;
+    font-weight: 700;
+    margin-top: -50px;
+}
+
+.nosotros-content {
+    padding: 20px;
+}
+
+.nosotros-title {
+    color: #FFD700;
+    text-align: center;
+    font-size: 2.5rem;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+    margin-bottom: 40px;
+}
+
+.nosotros-section {
+    background-image: url(../../assets/img/fondoLogo.png);
+    padding: 2rem;
+    border-radius: 12px;
+    border: 8px solid #2C1810;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    color: #FFD700;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.nosotros-section:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+}
+
+.justityText {
+    text-align: justify;
+    line-height: 1.6;
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+.imgNosotros {
+    border: 4px solid #FFD700;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    max-width: 180px;
+    transition: transform 0.3s ease;
+}

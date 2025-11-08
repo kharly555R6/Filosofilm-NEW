@@ -1,0 +1,42 @@
+.propuestas-container {
+    background-color: #1A1A1A;
+    min-height: 100vh;
+    color: #FFD700;
+}
+
+.propuestas-header {
+    background-color: #2C1810;
+    padding: 2rem 0;
+    border-bottom: 2px solid #FFD700;
+}
+
+.propuestas-content {
+    background-color: #333333;
+    padding: 2rem;
+    margin: 2rem 0;
+    border-radius: 8px;
+    border: 1px solid #FFD700;
+}
+
+.propuesta-card {
+    background-color: #2C1810;
+    border: 1px solid #FFD700;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    border-radius: 4px;
+}
+
+.propuesta-title {
+    color: #FFD700;
+    margin-bottom: 1rem;
+}
+
+.propuesta-status {
+    display: inline-block;
+    padding: 0.25rem 1rem;
+    border-radius: 15px;
+    background-color: #333333;
+    border: 1px solid #FFD700;
+    color: #FFD700;
+    margin-top: 1rem;
+}
