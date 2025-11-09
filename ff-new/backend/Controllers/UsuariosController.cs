@@ -6,7 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace backend.Controllers
 {
@@ -24,12 +24,30 @@ namespace backend.Controllers
 
         // 🔹 REGISTRO
         [HttpPost("registro")]
-        public IActionResult RegistrarUsuario([FromBody] Usuario nuevoUsuario)
+        public IActionResult RegistrarUsuario([FromBody] RegistroDTO dto)
         {
-            if (_context.Usuarios.Any(u => u.Correo_Electronico == nuevoUsuario.Correo_Electronico))
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            // Validar correo duplicado
+            if (_context.Usuarios.Any(u => u.Correo_Electronico == dto.Correo_Electronico))
                 return BadRequest("Ya existe un usuario con ese correo.");
 
-            nuevoUsuario.Fecha_Registro = DateTime.Now;
+            var nuevoUsuario = new Usuario
+            {
+                Nickname = dto.Nickname,
+                Nombre = dto.Nombre,
+                Apellido = dto.Apellido,
+                Correo_Electronico = dto.Correo_Electronico,
+                Contraseña = dto.Contraseña,
+                Telefono = dto.Telefono,
+                Sexo = dto.Sexo,
+                Fecha_Nacimiento = dto.Fecha_Nacimiento,
+                Foto_Perfil = string.IsNullOrEmpty(dto.FotoPerfil) ? null : dto.FotoPerfil,
+                Fecha_Registro = DateTime.Now,
+                ID_Rol = 3 // Por defecto "Usuario"
+            };
+
             _context.Usuarios.Add(nuevoUsuario);
             _context.SaveChanges();
 
@@ -51,7 +69,6 @@ namespace backend.Controllers
             if (usuario == null)
                 return Unauthorized("Correo o contraseña incorrectos.");
 
-            // 🔹 Crear token JWT
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(_jwtKey);
 
@@ -81,9 +98,9 @@ namespace backend.Controllers
             });
         }
 
-        // 🔹 ENDPOINT PROTEGIDO EJEMPLO
+        // 🔹 PERFIL (Protegido)
         [HttpGet("perfil")]
-        [Microsoft.AspNetCore.Authorization.Authorize]
+        [Authorize]
         public IActionResult Perfil()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -99,5 +116,52 @@ namespace backend.Controllers
             return Ok(usuario);
         }
 
+        // 🔹 ACTUALIZAR DATOS DE USUARIO (Protegido)
+        [HttpPut("actualizar")]
+        [Authorize]
+        public IActionResult ActualizarUsuario([FromBody] UsuarioActualizarDTO datos)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (!int.TryParse(userId, out int idUsuario))
+                return BadRequest("ID de usuario inválido o no encontrado en el token.");
+
+            var usuario = _context.Usuarios.FirstOrDefault(u => u.ID_Usuario == idUsuario);
+
+            if (usuario == null)
+                return NotFound("Usuario no encontrado.");
+
+            if (!string.IsNullOrEmpty(datos.Nombre))
+                usuario.Nombre = datos.Nombre;
+            if (!string.IsNullOrEmpty(datos.Apellido))
+                usuario.Apellido = datos.Apellido;
+            if (!string.IsNullOrEmpty(datos.Descripcion))
+                usuario.Descripcion = datos.Descripcion;
+            if (!string.IsNullOrEmpty(datos.Telefono))
+                usuario.Telefono = datos.Telefono;
+            if (!string.IsNullOrEmpty(datos.Sexo))
+                usuario.Sexo = datos.Sexo;
+            if (!string.IsNullOrEmpty(datos.Contrasena))
+                usuario.Contraseña = datos.Contrasena;
+
+            _context.SaveChanges();
+
+            return Ok(new { message = "Usuario actualizado correctamente." });
+        }
+
+        // 🔹 ELIMINAR USUARIO POR ID (Admin)
+        [HttpDelete("eliminar/{id}")]
+        public IActionResult EliminarUsuarioPorId(int id)
+        {
+            var usuario = _context.Usuarios.FirstOrDefault(u => u.ID_Usuario == id);
+
+            if (usuario == null)
+                return NotFound(new { message = "Usuario no encontrado." });
+
+            _context.Usuarios.Remove(usuario);
+            _context.SaveChanges();
+
+            return Ok(new { message = $"Usuario con ID {id} eliminado correctamente." });
+        }
     }
 }
