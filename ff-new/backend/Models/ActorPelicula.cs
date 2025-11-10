@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace backend.Models
 {
+    [Table("Actor_Pelicula")]
     public class ActorPelicula
     {
         [Key, Column(Order = 0)]

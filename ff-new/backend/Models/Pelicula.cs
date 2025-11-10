@@ -31,5 +31,10 @@ namespace backend.Models
 
         [Required]
         public int ID_Pais_Origen { get; set; }
+
+        public string? Clasificacion { get; set; } = string.Empty;
+
+        public ICollection<PeliculaGenero> PeliculaGeneros { get; set; } = new List<PeliculaGenero>();
+
     }
 }

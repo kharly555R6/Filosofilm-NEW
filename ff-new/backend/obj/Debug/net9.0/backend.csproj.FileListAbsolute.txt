@@ -165,3 +165,5 @@ D:\Escritorio\Filosofilm-NEW\ff-new\backend\bin\Debug\net9.0\backend.dll
 D:\Escritorio\Filosofilm-NEW\ff-new\backend\bin\Debug\net9.0\backend.pdb
 D:\Escritorio\Filosofilm-NEW\ff-new\backend\obj\Debug\net9.0\backend.genruntimeconfig.cache
 D:\Escritorio\Filosofilm-NEW\ff-new\backend\obj\Debug\net9.0\ref\backend.dll
+D:\Escritorio\Filosofilm-NEW\ff-new\backend\bin\Debug\net9.0\package-lock.json
+D:\Escritorio\Filosofilm-NEW\ff-new\backend\bin\Debug\net9.0\package.json

@@ -18,7 +18,7 @@ namespace backend.Controllers
         [HttpGet("{id}")]
         public IActionResult GetPorId(int id)
         {
-            var resena = _context.Resenas.FirstOrDefault(r => r.ID_Resena == id);
+            var resena = _context.Resenas.FirstOrDefault(r => r.ID_Reseña == id);
             if (resena == null) return NotFound();
             return Ok(resena);
         }
@@ -34,7 +34,7 @@ namespace backend.Controllers
         [HttpPut("{id}")]
         public IActionResult Actualizar(int id, [FromBody] Resena resena)
         {
-            var existente = _context.Resenas.FirstOrDefault(r => r.ID_Resena == id);
+            var existente = _context.Resenas.FirstOrDefault(r => r.ID_Reseña == id);
             if (existente == null) return NotFound();
 
             existente.Contenido = resena.Contenido;
@@ -50,7 +50,7 @@ namespace backend.Controllers
         [HttpDelete("{id}")]
         public IActionResult Borrar(int id)
         {
-            var resena = _context.Resenas.FirstOrDefault(r => r.ID_Resena == id);
+            var resena = _context.Resenas.FirstOrDefault(r => r.ID_Reseña == id);
             if (resena == null) return NotFound();
 
             _context.Resenas.Remove(resena);

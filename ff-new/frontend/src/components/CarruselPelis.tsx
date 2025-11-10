@@ -1,48 +1,60 @@
 import React from "react";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import { Navigation } from "swiper/modules";
+import { useNavigate } from "react-router-dom"; // 👈 Importante
+import "../styles/Components/CarruselPelis.css";
 
 interface Pelicula {
-  id_Pelicula: number;
+  iD_Pelicula: number;
   titulo: string;
   imagen: string;
 }
 
-interface Props {
+interface CarruselPelisProps {
   titulo: string;
   peliculas: Pelicula[];
+  classNameTitulo?: string;
 }
 
-const CarruselPelis: React.FC<Props> = ({ titulo, peliculas }) => {
-  const settings = {
-    dots: false,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 4,
-    slidesToScroll: 2,
-    responsive: [
-      { breakpoint: 1024, settings: { slidesToShow: 3 } },
-      { breakpoint: 768, settings: { slidesToShow: 2 } },
-      { breakpoint: 480, settings: { slidesToShow: 1 } },
-    ],
+const CarruselPelis: React.FC<CarruselPelisProps> = ({ titulo, peliculas, classNameTitulo }) => {
+  const navigate = useNavigate(); // 👈 para redirigir
+
+  const handleClick = (id: number) => {
+    navigate(`/InicioPelicula/${id}`); // 👈 redirige a la página con el id
   };
 
   return (
-    <div className="mb-8">
-      <h2 className="text-xl font-bold mb-3">{titulo}</h2>
-      <Slider {...settings}>
+    <div className="container carrusel-container mb-8">
+      <h2 className={classNameTitulo ? classNameTitulo : "carrusel-title text-xl font-bold mb-3"}>
+        {titulo}
+      </h2>
+
+      <Swiper
+        modules={[Navigation]}
+        navigation
+        spaceBetween={20}
+        slidesPerView={3}
+        breakpoints={{
+          1200: { slidesPerView: 3 },
+          768: { slidesPerView: 2 },
+          480: { slidesPerView: 1 },
+        }}
+      >
         {peliculas.map((peli) => (
-          <div key={peli.id_Pelicula} className="p-2 text-center">
-            <img
-              src={peli.imagen}
-              alt={peli.titulo}
-              className="rounded-2xl w-full h-64 object-cover shadow-lg"
-            />
-            <p className="mt-2 font-semibold">{peli.titulo}</p>
-          </div>
+          <SwiperSlide key={peli.iD_Pelicula}>
+            <div
+              className="carousel-slot text-center"
+              onClick={() => handleClick(peli.iD_Pelicula)}
+              style={{ cursor: "pointer" }}
+            >
+              <img src={peli.imagen} alt={peli.titulo} className="imgPelicula" />
+              <p className="NombrePeli">{peli.titulo}</p>
+            </div>
+          </SwiperSlide>
         ))}
-      </Slider>
+      </Swiper>
     </div>
   );
 };

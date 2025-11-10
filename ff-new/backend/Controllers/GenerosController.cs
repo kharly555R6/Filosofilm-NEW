@@ -51,7 +51,6 @@ namespace backend.Controllers
 
             genero.Nombre = generoActualizado.Nombre;
             genero.Descripcion = generoActualizado.Descripcion;
-            genero.Imagen_Genero = generoActualizado.Imagen_Genero;
 
             _context.SaveChanges();
             return Ok(genero);

@@ -8,7 +8,7 @@ namespace backend.Models
     public class Resena
     {
         [Key]
-        public int ID_Resena { get; set; }
+        public int ID_Reseña { get; set; }
 
         [Required]
         public string Contenido { get; set; } = string.Empty;

@@ -1,0 +1,18 @@
+/* ====== CONTENEDOR GENERAL ====== */
+.container.carrusel-container {
+  max-width: 100%;              /* evita que se expanda más allá de la navbar */
+  margin: 80px auto;              /* centra el carrusel horizontalmente */
+  padding: 0 10px;             /* espacio interno */
+}
+
+/* ====== IMÁGENES ====== */
+.carousel-slot .imgPelicula {
+  display: block;
+  margin: 45px auto;
+  width: 250px;
+  height: 300px;
+  object-fit: cover;
+  border: 8px solid #2C1810;
+  border-radius: 12px;
+}
+

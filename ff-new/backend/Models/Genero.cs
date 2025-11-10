@@ -15,9 +15,8 @@ namespace backend.Models
         public string Nombre { get; set; } = string.Empty;
 
         [Required]
-        public string Descripcion { get; set; }  = string.Empty;
-
-        [Required]
-        public string Imagen_Genero { get; set; } = string.Empty;
+        public string Descripcion { get; set; } = string.Empty;
+        
+        public ICollection<PeliculaGenero> PeliculaGeneros { get; set; } = new List<PeliculaGenero>();
     }
 }

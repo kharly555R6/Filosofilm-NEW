@@ -17,8 +17,6 @@ namespace backend.Data
         public DbSet<Pelicula> Peliculas { get; set; }
         public DbSet<PeliculaGenero> PeliculaGeneros { get; set; }
         public DbSet<Genero> Generos { get; set; }
-        public DbSet<Clasificacion> Clasificaciones { get; set; }
-        public DbSet<ClasificacionPelicula> ClasificacionPeliculas { get; set; }
         public DbSet<Favorito> Favoritos { get; set; }
         public DbSet<Visto> Vistos { get; set; }
         public DbSet<Like> Likes { get; set; }
@@ -40,9 +38,6 @@ namespace backend.Data
 
             modelBuilder.Entity<PeliculaGenero>()
                 .HasKey(pg => new { pg.ID_Pelicula, pg.ID_Genero });
-
-            modelBuilder.Entity<ClasificacionPelicula>()
-                .HasKey(cp => new { cp.ID_Clasificacion, cp.ID_Pelicula });
 
             modelBuilder.Entity<Favorito>()
                 .HasKey(f => new { f.ID_Usuario, f.ID_Pelicula });
