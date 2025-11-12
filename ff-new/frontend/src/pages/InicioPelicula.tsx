@@ -5,7 +5,6 @@ import NavbarIn from "../components/NavbarIn";
 import CarruselActores from "../components/CarruselActores";
 import "../styles/Pages/InicioPelicula.css";
 
-import actor from "../assets/img/Elizabeth_Lail.jpg";
 import visto0 from "../assets/img/visto0.png";
 import visto1 from "../assets/img/visto1.png";
 import Fav0 from "../assets/img/Like0.png";
@@ -14,7 +13,6 @@ import Fav1 from "../assets/img/Like1.png";
 interface Genero {
   id_Genero: number;
   nombre: string;
-  descripcion: string;
 }
 
 interface Pelicula {
@@ -23,7 +21,7 @@ interface Pelicula {
   imagen: string;
   sinopsis: string;
   fecha_Lanzamiento: string;
-  genero: string[]; // Solo los nombres de los géneros
+  genero: string[];
   duracion: string;
   presupuesto: number;
   recaudacion: number;
@@ -31,33 +29,44 @@ interface Pelicula {
 }
 
 interface Resena {
-  usuario: string;
-  calificacion: number;
+  id_Reseña: number;
   contenido: string;
+  calificacion: number;
+  usuario: {
+    id_Usuario: number;
+    nickname: string;
+  };
 }
 
 const PeliculaPantalla: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
+
   const [pelicula, setPelicula] = useState<Pelicula | null>(null);
   const [favorito, setFavorito] = useState(false);
   const [visto, setVisto] = useState(false);
-
-  const [showModal, setShowModal] = useState(false);
   const [resenas, setResenas] = useState<Resena[]>([]);
-  const [calificacionModal, setCalificacionModal] = useState(5);
-  const [contenidoModal, setContenidoModal] = useState("");
 
   useEffect(() => {
     if (!id) return;
 
+    // 🔹 Cargar datos de la película
     fetch(`https://localhost:5001/api/peliculas/${id}`)
       .then((res) => res.json())
       .then((data) => {
         const generosNombres: string[] = (data.genero ?? []).map((g: Genero) => g.nombre);
         setPelicula({ ...data, genero: generosNombres });
       })
-      .catch((err) => console.error("Error al cargar la película:", err));
+      .catch((err) => console.error("Error al cargar película:", err));
+
+    // 🔹 Cargar reseñas automáticamente (como el carrusel)
+    fetch(`https://localhost:5001/api/resenas/pelicula/${id}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("No hay reseñas disponibles");
+        return res.json();
+      })
+      .then((data) => setResenas(data))
+      .catch(() => setResenas([]));
   }, [id]);
 
   if (!pelicula) {
@@ -75,20 +84,6 @@ const PeliculaPantalla: React.FC = () => {
 
   const toggleFavorito = () => setFavorito(!favorito);
   const toggleVisto = () => setVisto(!visto);
-
-  const handleGuardarResena = () => {
-    const nuevaResena: Resena = {
-      usuario: "UsuarioRandom",
-      calificacion: calificacionModal,
-      contenido: contenidoModal,
-    };
-    setResenas([...resenas, nuevaResena]);
-    setContenidoModal("");
-    setCalificacionModal(5);
-    setShowModal(false);
-
-    // Aquí puedes hacer fetch POST a tu backend para guardar la reseña
-  };
 
   return (
     <div>
@@ -108,15 +103,6 @@ const PeliculaPantalla: React.FC = () => {
                 className="imgPeli my-1"
                 alt={pelicula.titulo}
               />
-              <div className="text-center mt-3">
-                <button
-                  type="button"
-                  className="btn btn-warning BTNRES"
-                  onClick={() => setShowModal(true)}
-                >
-                  Hacer Reseña
-                </button>
-              </div>
             </div>
           </div>
 
@@ -206,17 +192,22 @@ const PeliculaPantalla: React.FC = () => {
                     </tr>
                     <tr>
                       <th>Duración</th>
-                      <td>{pelicula.duracion ? `${pelicula.duracion} min` : "No disponible"}</td>
+                      <td>
+                        {pelicula.duracion
+                          ? `${pelicula.duracion} min`
+                          : "No disponible"}
+                      </td>
                     </tr>
                     <tr>
                       <th>Fecha de Estreno</th>
                       <td>
                         {pelicula.fecha_Lanzamiento
-                          ? new Date(pelicula.fecha_Lanzamiento).toISOString().split("T")[0]
+                          ? new Date(pelicula.fecha_Lanzamiento)
+                              .toISOString()
+                              .split("T")[0]
                           : "No disponible"}
                       </td>
                     </tr>
-
                     <tr>
                       <th>Género</th>
                       <td>
@@ -225,7 +216,6 @@ const PeliculaPantalla: React.FC = () => {
                           : "No disponible"}
                       </td>
                     </tr>
-
                     <tr>
                       <th>Clasificación</th>
                       <td>{pelicula.clasificacion || "No disponible"}</td>
@@ -238,98 +228,43 @@ const PeliculaPantalla: React.FC = () => {
         </div>
       </div>
 
-      {/* Actores */}
-      <div className="container text-center">
-        <h2 className="text-light py-3 DG">ACTORES</h2>
-        <div className="row ContenedorActores text-light">
-          {[1, 2, 3].map((i) => (
-            <div className="col-md-4 text-center" key={i}>
-              <img src={actor} alt="Actor" className="rounded-circle mb-4 actorImage" />
-              <h4>@actor</h4>
-            </div>
-          ))}
-        </div>
+      <br />
+      <hr />
+
+      {/* 🔹 Carrusel de actores */}
+      <div className="container text-center mt-5">
+        <h2 className="text-light DG RepartoH2">REPARTO</h2>
+        {id && (
+          <CarruselActores
+            endpoint={`https://localhost:5001/api/ActorPeliculas/pelicula/${id}`}
+          />
+        )}
       </div>
 
-      <hr />
+      <hr id="br_mb" />
 
-      <CarruselActores />
-
-      <hr />
-
-      {/* Reseñas */}
+      {/* 🔹 Bloque de reseñas (automático como carrusel) */}
       <div className="container text-light">
-        <h2 className="text-center py-3 DG">Reseñas de Usuarios</h2>
+        <h2 className="text-center pt-3 DG">Reseñas de Usuarios</h2>
         <div id="ContenedorReseñas">
           {resenas.length === 0 && (
             <p className="text-center">No hay reseñas aún.</p>
           )}
-          {resenas.map((resena, index) => (
-            <div className="card bg-dark text-light mb-3 p-4 text-justify" key={index}>
-              <h4>@{resena.usuario}</h4>
-              <p>{resena.contenido}</p>
-              <p>{"⭐".repeat(resena.calificacion)}</p>
-            </div>
-          ))}
+
+          <div className="reviews-list">
+            {resenas.map((resena, index) => (
+              <div className="card review-card bg-dark text-light mb-4 pr-4 pl-4 d-flex" key={index}>
+                <div className="review-body card_m">
+                  <div className="review-user-name text-warning mb-1">{resena.usuario?.nickname || 'Usuario'}</div>
+                  <div className="review-content text-justify mb-1">{resena.contenido}</div>
+                  <div className="review-stars">{"⭐".repeat(resena.calificacion)}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
         </div>
       </div>
-
-      {/* Modal */}
-      {showModal && (
-        <div className="modal show d-block" tabIndex={-1}>
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Hacer Reseña</h5>
-                <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
-              </div>
-              <div className="modal-body">
-                <div className="mb-3">
-                  <label className="form-label">Calificación</label>
-                  <select
-                    className="form-select"
-                    value={calificacionModal}
-                    onChange={(e) => setCalificacionModal(parseInt(e.target.value))}
-                  >
-                    {[1, 2, 3, 4, 5].map((n) => (
-                      <option key={n} value={n}>
-                        {n} estrella{n > 1 ? "s" : ""}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="mb-3">
-                  <label className="form-label">Contenido de la reseña</label>
-                  <textarea
-                    className="form-control"
-                    rows={4}
-                    value={contenidoModal}
-                    onChange={(e) => setContenidoModal(e.target.value)}
-                    placeholder="Escribe tu reseña aquí"
-                  />
-                </div>
-              </div>
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={() => setShowModal(false)}
-                >
-                  Cerrar
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={handleGuardarResena}
-                >
-                  Guardar
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
     </div>
   );
 };

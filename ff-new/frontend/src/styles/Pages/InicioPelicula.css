@@ -85,20 +85,6 @@ hr {
     background: linear-gradient(to right, #2C1810, #FFD700, #2C1810);
 }
 
-.actorImage {
-    width: 220px;
-    height: 220px;
-    border-radius: 50%;
-    border: 8px solid #FFD700;
-    object-fit: cover;
-    margin-bottom: 2rem;
-    transition: 0.2s;
-}
-
-.actorImage:hover{
-    transform: scale(1.1);
-}
-
 .DG{
     font-size: 2.5rem;
 }
@@ -110,4 +96,16 @@ hr {
 
 .tablaDatos{
     font-size: 1.3rem;
+}
+
+.RepartoH2{
+    margin-bottom: -50px;
+}
+
+#br_mb{
+    margin-top: -40px;
+}
+
+.card_m{
+    margin: -30px 0;
 }

@@ -1,54 +1,77 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import { Navigation } from "swiper/modules";
 
-interface ActorPelicula {
+interface ActorItem {
   id_Actor: number;
-  nombre?: string;
-  imagen?: string;
+  personaje: string;
+  actor: {
+    nombre: string;
+    foto: string;
+  };
 }
 
-const ActoresDePelicula: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const [actores, setActores] = useState<ActorPelicula[]>([]);
+interface CarruselActoresProps {
+  endpoint: string; // URL del backend (por ejemplo: api/ActorPeliculas/pelicula/1)
+}
+
+const CarruselActores: React.FC<CarruselActoresProps> = ({ endpoint }) => {
+  const [actores, setActores] = useState<ActorItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!id) return;
-    fetch(`https://localhost:5001/api/peliculaActor/${id}`)
-      .then((res) => res.json())
-      .then((data) => setActores(data))
-      .catch((err) => console.error("Error al cargar actores:", err));
-  }, [id]);
+    const fetchActores = async () => {
+      try {
+        const response = await fetch(endpoint);
+        if (!response.ok) throw new Error("Error al cargar los actores");
+        const data = await response.json();
+        setActores(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  if (actores.length === 0) {
-    return (
-      <div className="text-center text-light mt-4">
-        <h4>No hay actores registrados para esta película.</h4>
-      </div>
-    );
-  }
+    fetchActores();
+  }, [endpoint]);
+
+  if (loading) return <p className="text-light">Cargando actores...</p>;
+  if (actores.length === 0) return <p className="text-light my-5 pt-5 pb-3">No hay actores registrados.</p>;
 
   return (
-    <div className="container text-center text-light mt-4">
-      <h2 className="mb-3">Actores de la Película</h2>
-      <div className="row">
-        {actores.map((actor) => (
-          <div className="col-md-4 mb-4" key={actor.id_Actor}>
-            <div className="card bg-dark text-light p-3">
-              {actor.imagen && (
-                <img
-                  src={actor.imagen}
-                  alt={actor.nombre || `Actor ${actor.id_Actor}`}
-                  className="rounded-circle mb-3 mx-auto"
-                  style={{ width: "120px", height: "120px", objectFit: "cover" }}
-                />
-              )}
-              <h5>{actor.nombre || `Actor ID: ${actor.id_Actor}`}</h5>
+    <div className="carrusel-container">
+      <Swiper
+        modules={[Navigation]}
+        navigation
+        spaceBetween={20}
+        slidesPerView={3}
+        breakpoints={{
+          1200: { slidesPerView: 3 },
+          768: { slidesPerView: 2 },
+          480: { slidesPerView: 1 },
+        }}
+      >
+        {actores.map((item) => (
+          <SwiperSlide key={item.id_Actor}>
+            <div className="carousel-slot text-center">
+              <img
+                src={item.actor.foto}
+                alt={item.actor.nombre}
+                className="imgPelicula"
+              />
+              <h5 className="text-light mt-2">{item.actor.nombre}</h5>
+              <p className="text-secondary" style={{ fontSize: "0.9rem" }}>
+                {item.personaje}
+              </p>
             </div>
-          </div>
+          </SwiperSlide>
         ))}
-      </div>
+      </Swiper>
     </div>
   );
 };
 
-export default ActoresDePelicula;
+export default CarruselActores;

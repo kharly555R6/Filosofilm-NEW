@@ -212,8 +212,6 @@ const FormR: React.FC<FormRProps> = ({ onBack }) => {
             </div>
           </div>
 
-          <div className="col-1"></div>
-
           <div className="col-5 d-flex flex-column justify-content-between">
             <div>
               <label htmlFor="InputBirthDate" className="form-label labelR">

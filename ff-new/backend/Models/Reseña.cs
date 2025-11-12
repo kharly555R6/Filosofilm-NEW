@@ -17,12 +17,15 @@ namespace backend.Models
         public DateTime Fecha_Publicacion { get; set; }
 
         [Required]
-        public float Calificacion { get; set; }
+        public double Calificacion { get; set; }
 
         [Required]
         public int ID_Usuario { get; set; }
 
         [Required]
         public int ID_Pelicula { get; set; }
+
+        [ForeignKey("ID_Usuario")]
+        public virtual required Usuario Usuario { get; set; }
     }
 }
