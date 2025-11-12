@@ -11,14 +11,15 @@ namespace backend.Controllers
     public class ResenasController : ControllerBase
     {
         private readonly AppDbContext _context;
+
         public ResenasController(AppDbContext context) => _context = context;
 
-        // ✅ Obtener todas las reseñas incluyendo usuario
+        // 🔹 Obtener todas las reseñas con información básica del usuario
         [HttpGet]
         public IActionResult GetTodos()
         {
             var resenas = _context.Resenas
-                .Include(r => r.Usuario) // 🔹 Incluye el usuario
+                .Include(r => r.Usuario)
                 .Select(r => new
                 {
                     r.ID_Reseña,
@@ -37,7 +38,7 @@ namespace backend.Controllers
             return Ok(resenas);
         }
 
-        // ✅ Obtener reseña por ID
+        // 🔹 Obtener reseña por ID
         [HttpGet("{id}")]
         public IActionResult GetPorId(int id)
         {
@@ -59,20 +60,38 @@ namespace backend.Controllers
                 })
                 .FirstOrDefault();
 
-            if (resena == null) return NotFound();
+            if (resena == null)
+                return NotFound();
+
             return Ok(resena);
         }
 
-        // ✅ Crear una nueva reseña
-        [HttpPost]
-        public IActionResult Crear([FromBody] Resena resena)
+        // 🔹 Crear una nueva reseña (solo contenido y calificación)
+        [HttpPost("{idPelicula}")]
+        public IActionResult CrearResena(int idPelicula, [FromBody] CrearResenaDTO dto)
         {
-            _context.Resenas.Add(resena);
+            if (dto == null || string.IsNullOrWhiteSpace(dto.Contenido))
+                return BadRequest(new { mensaje = "Contenido de reseña inválido." });
+
+            // TODO: Obtener ID del usuario logueado (JWT, sesión, etc.)
+            int idUsuario = ObtenerIdUsuarioLogueado();
+
+            var nuevaResena = new Resena
+            {
+                Contenido = dto.Contenido,
+                Calificacion = dto.Calificacion,
+                ID_Usuario = idUsuario,
+                ID_Pelicula = idPelicula,
+                Fecha_Publicacion = DateTime.UtcNow
+            };
+
+            _context.Resenas.Add(nuevaResena);
             _context.SaveChanges();
-            return Ok(resena);
+
+            return Ok(nuevaResena);
         }
 
-        // ✅ Eliminar una reseña
+        // 🔹 Eliminar una reseña
         [HttpDelete("{id}")]
         public IActionResult Borrar(int id)
         {
@@ -90,6 +109,7 @@ namespace backend.Controllers
         {
             var resenas = _context.Resenas
                 .Include(r => r.Usuario)
+                .Include(r => r.Pelicula) // 🔹 Incluye la entidad Pelicula
                 .Where(r => r.ID_Usuario == idUsuario)
                 .Select(r => new
                 {
@@ -101,12 +121,17 @@ namespace backend.Controllers
                         r.Usuario.ID_Usuario,
                         r.Usuario.Nickname
                     },
+                    Pelicula = new
+                    {
+                        r.Pelicula.ID_Pelicula,
+                        r.Pelicula.Titulo
+                    },
                     r.ID_Pelicula,
                     r.ID_Usuario
                 })
                 .ToList();
 
-            if (resenas.Count == 0)
+            if (!resenas.Any())
                 return NotFound(new { mensaje = "Este usuario no tiene reseñas." });
 
             return Ok(resenas);
@@ -134,7 +159,7 @@ namespace backend.Controllers
                 })
                 .ToList();
 
-            if (resenas.Count == 0)
+            if (!resenas.Any())
                 return NotFound(new { mensaje = "Esta película no tiene reseñas." });
 
             return Ok(resenas);
@@ -167,5 +192,19 @@ namespace backend.Controllers
 
             return Ok(resena);
         }
+
+        // 🔹 Placeholder: reemplazar según tu lógica de autenticación
+        private int ObtenerIdUsuarioLogueado()
+        {
+            // Ejemplo temporal:
+            return 1;
+        }
+    }
+
+    // DTO para creación de reseña
+    public class CrearResenaDTO
+    {
+        public string Contenido { get; set; } = string.Empty;
+        public int Calificacion { get; set; }
     }
 }

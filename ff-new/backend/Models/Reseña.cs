@@ -26,6 +26,9 @@ namespace backend.Models
         public int ID_Pelicula { get; set; }
 
         [ForeignKey("ID_Usuario")]
-        public virtual required Usuario Usuario { get; set; }
+        public virtual Usuario Usuario { get; set; } = null!;
+
+        [ForeignKey("ID_Pelicula")]
+        public virtual Pelicula Pelicula { get; set; } = null!;
     }
 }
