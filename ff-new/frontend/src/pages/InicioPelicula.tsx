@@ -50,10 +50,11 @@ const PeliculaPantalla: React.FC = () => {
   const [nuevoContenido, setNuevoContenido] = useState("");
   const [nuevoRating, setNuevoRating] = useState<number>(0);
   const [publicando, setPublicando] = useState(false);
+  const [cargandoFavorito, setCargandoFavorito] = useState(false);
+  const [cargandoVisto, setCargandoVisto] = useState(false);
 
   const promedioCalificacion = useMemo(() => {
     if (!Array.isArray(resenas) || resenas.length === 0) return 0;
-    // Filtrar solo reseñas válidas con calificacion numérica
     const validas = resenas.filter(r => r && typeof r.calificacion === 'number');
     if (validas.length === 0) return 0;
     const suma = validas.reduce((acc, r) => acc + r.calificacion, 0);
@@ -82,7 +83,60 @@ const PeliculaPantalla: React.FC = () => {
       })
       .then((data) => setResenas(data))
       .catch(() => setResenas([]));
+
+    cargarEstadoFavorito();
+    cargarEstadoVisto();
   }, [id]);
+
+  const cargarEstadoFavorito = async () => {
+    const usuarioGuardado = localStorage.getItem("usuario");
+    if (!usuarioGuardado || !id) return;
+
+    try {
+      const parsed = JSON.parse(usuarioGuardado);
+      const token = parsed?.token;
+      
+      if (!token) return;
+
+      const res = await fetch(`${API_URL}/favoritos/pelicula/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setFavorito(data.esFavorito);
+      }
+    } catch (error) {
+      console.error("Error al cargar estado de favorito:", error);
+    }
+  };
+
+  const cargarEstadoVisto = async () => {
+    const usuarioGuardado = localStorage.getItem("usuario");
+    if (!usuarioGuardado || !id) return;
+
+    try {
+      const parsed = JSON.parse(usuarioGuardado);
+      const token = parsed?.token;
+      
+      if (!token) return;
+
+      const res = await fetch(`${API_URL}/vistos/pelicula/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setVisto(data.fueVista);
+      }
+    } catch (error) {
+      console.error("Error al cargar estado de visto:", error);
+    }
+  };
 
   if (!pelicula) {
     return (
@@ -97,8 +151,127 @@ const PeliculaPantalla: React.FC = () => {
   const handlePerfil = () => navigate("/MiInformacion");
   const handleLogout = () => navigate("/");
 
-  const toggleFavorito = () => setFavorito(!favorito);
-  const toggleVisto = () => setVisto(!visto);
+  const toggleFavorito = async () => {
+    const usuarioGuardado = localStorage.getItem("usuario");
+    if (!usuarioGuardado || !id) {
+      alert("Debes iniciar sesión para gestionar favoritos.");
+      navigate("/");
+      return;
+    }
+
+    setCargandoFavorito(true);
+
+    try {
+      const parsed = JSON.parse(usuarioGuardado);
+      const token = parsed?.token;
+
+      if (!token) {
+        alert("Token de autenticación no encontrado.");
+        return;
+      }
+
+      if (favorito) {
+        const res = await fetch(`${API_URL}/favoritos/pelicula/${id}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (res.ok) {
+          setFavorito(false);
+          const data = await res.json();
+        } else {
+          throw new Error("Error al eliminar de favoritos");
+        }
+      } else {
+        const res = await fetch(`${API_URL}/favoritos`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            ID_Pelicula: Number(id),
+          }),
+        });
+
+        if (res.ok) {
+          setFavorito(true);
+          const data = await res.json();
+        } else {
+          const errorData = await res.json().catch(() => null);
+          throw new Error(errorData?.mensaje || "Error al agregar a favoritos");
+        }
+      }
+    } catch (error: any) {
+      console.error("Error en favoritos:", error);
+      alert(error.message || "Error al gestionar favoritos");
+    } finally {
+      setCargandoFavorito(false);
+    }
+  };
+
+  const toggleVisto = async () => {
+    const usuarioGuardado = localStorage.getItem("usuario");
+    if (!usuarioGuardado || !id) {
+      alert("Debes iniciar sesión para gestionar películas vistas.");
+      navigate("/");
+      return;
+    }
+
+    setCargandoVisto(true);
+
+    try {
+      const parsed = JSON.parse(usuarioGuardado);
+      const token = parsed?.token;
+
+      if (!token) {
+        alert("Token de autenticación no encontrado.");
+        return;
+      }
+
+      if (visto) {
+        const res = await fetch(`${API_URL}/vistos/pelicula/${id}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (res.ok) {
+          setVisto(false);
+          const data = await res.json();
+        } else {
+          throw new Error("Error al eliminar de vistas");
+        }
+      } else {
+        const res = await fetch(`${API_URL}/vistos`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            ID_Pelicula: Number(id),
+          }),
+        });
+
+        if (res.ok) {
+          setVisto(true);
+          const data = await res.json();
+        } else {
+          const errorData = await res.json().catch(() => null);
+          throw new Error(errorData?.mensaje || "Error al marcar como vista");
+        }
+      }
+    } catch (error: any) {
+      console.error("Error en vistos:", error);
+      alert(error.message || "Error al gestionar películas vistas");
+    } finally {
+      setCargandoVisto(false);
+    }
+  };
 
   const openModal = () => setShowModal(true);
   const closeModal = () => {
@@ -263,28 +436,32 @@ const PeliculaPantalla: React.FC = () => {
                   <div
                     className="col-lg-6"
                     onClick={toggleFavorito}
-                    style={{ cursor: "pointer" }}
+                    style={{ cursor: cargandoFavorito ? "not-allowed" : "pointer" }}
                   >
                     <img
                       className="Iconos"
                       src={favorito ? Fav1 : Fav0}
                       alt="Ícono Favorita"
                     />
-                    <div>Favorita</div>
+                    <div>
+                      {cargandoFavorito ? "Cargando..." : "Favorita"}
+                    </div>
                   </div>
 
                   <div
                     id="Visto"
                     className="col-lg-6"
                     onClick={toggleVisto}
-                    style={{ cursor: "pointer" }}
+                    style={{ cursor: cargandoVisto ? "not-allowed" : "pointer" }}
                   >
                     <img
                       className="Iconos"
                       src={visto ? visto1 : visto0}
                       alt="Ícono Vista"
                     />
-                    <div>Vista</div>
+                    <div>
+                      {cargandoVisto ? "Cargando..." : "Vista"}
+                    </div>
                   </div>
                 </div>
               </div>
