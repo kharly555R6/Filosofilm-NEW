@@ -19,15 +19,14 @@ interface CarruselPelisProps {
 }
 
 const CarruselPelis: React.FC<CarruselPelisProps> = ({ titulo, peliculas, classNameTitulo }) => {
-  const navigate = useNavigate(); // 👈 para redirigir
-
+  const navigate = useNavigate(); 
   const handleClick = (id: number) => {
-    navigate(`/InicioPelicula/${id}`); // 👈 redirige a la página con el id
+    navigate(`/InicioPelicula/${id}`);
   };
 
   return (
-    <div className="container carrusel-container mb-8">
-      <h2 className={classNameTitulo ? classNameTitulo : "carrusel-title text-xl font-bold mb-3"}>
+    <div className="carrusel-container CarruselContainer">
+      <h2 className={classNameTitulo ? classNameTitulo : "carrusel-title text-xl font-bold"}>
         {titulo}
       </h2>
 

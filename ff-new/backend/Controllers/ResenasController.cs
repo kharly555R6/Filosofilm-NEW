@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using backend.Data;
 using backend.Models;
+using backend.DTOs;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace backend.Controllers
 {
@@ -66,41 +68,64 @@ namespace backend.Controllers
             return Ok(resena);
         }
 
-        // 🔹 Crear una nueva reseña (solo contenido y calificación)
-        [HttpPost("{idPelicula}")]
-        public IActionResult CrearResena(int idPelicula, [FromBody] CrearResenaDTO dto)
+        // 🔹 Crear una nueva reseña (con autenticación)
+        [HttpPost]
+        [Authorize]
+        public IActionResult CrearResena([FromBody] CrearResenaDTO dto)
         {
             if (dto == null || string.IsNullOrWhiteSpace(dto.Contenido))
                 return BadRequest(new { mensaje = "Contenido de reseña inválido." });
 
-            // TODO: Obtener ID del usuario logueado (JWT, sesión, etc.)
-            int idUsuario = ObtenerIdUsuarioLogueado();
+            // 🔹 Obtener el ID del usuario desde el token
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int idUsuario))
+                return Unauthorized(new { mensaje = "Usuario no válido o no autenticado." });
 
+            // Validar que la película exista
+            var pelicula = _context.Peliculas.Find(dto.ID_Pelicula);
+            if (pelicula == null)
+                return BadRequest(new { mensaje = "La película especificada no existe." });
+
+            // Verificar si el usuario ya ha reseñado esta película
+            bool yaExiste = _context.Resenas
+                .Any(r => r.ID_Usuario == idUsuario && r.ID_Pelicula == dto.ID_Pelicula);
+
+            if (yaExiste)
+                return BadRequest(new { mensaje = "Ya has publicado una reseña para esta película." });
+
+            // Crear la reseña
             var nuevaResena = new Resena
             {
                 Contenido = dto.Contenido,
                 Calificacion = dto.Calificacion,
                 ID_Usuario = idUsuario,
-                ID_Pelicula = idPelicula,
+                ID_Pelicula = dto.ID_Pelicula,
                 Fecha_Publicacion = DateTime.UtcNow
             };
 
             _context.Resenas.Add(nuevaResena);
             _context.SaveChanges();
 
-            return Ok(nuevaResena);
-        }
+            // Devolver la reseña creada con datos del usuario
+            var resenaCreada = _context.Resenas
+                .Include(r => r.Usuario)
+                .Where(r => r.ID_Reseña == nuevaResena.ID_Reseña)
+                .Select(r => new
+                {
+                    id_Reseña = r.ID_Reseña,
+                    contenido = r.Contenido,
+                    calificacion = r.Calificacion,
+                    usuario = new
+                    {
+                        id_Usuario = r.Usuario.ID_Usuario,
+                        nickname = r.Usuario.Nickname
+                    },
+                    id_Pelicula = r.ID_Pelicula,
+                    id_Usuario = r.ID_Usuario
+                })
+                .FirstOrDefault();
 
-        // 🔹 Eliminar una reseña
-        [HttpDelete("{id}")]
-        public IActionResult Borrar(int id)
-        {
-            var resena = _context.Resenas.FirstOrDefault(r => r.ID_Reseña == id);
-            if (resena == null) return NotFound();
-
-            _context.Resenas.Remove(resena);
-            _context.SaveChanges();
-            return NoContent();
+            return Ok(resenaCreada);
         }
 
         // 🔹 Obtener reseñas por ID de usuario
@@ -109,7 +134,7 @@ namespace backend.Controllers
         {
             var resenas = _context.Resenas
                 .Include(r => r.Usuario)
-                .Include(r => r.Pelicula) // 🔹 Incluye la entidad Pelicula
+                .Include(r => r.Pelicula)
                 .Where(r => r.ID_Usuario == idUsuario)
                 .Select(r => new
                 {
@@ -192,19 +217,5 @@ namespace backend.Controllers
 
             return Ok(resena);
         }
-
-        // 🔹 Placeholder: reemplazar según tu lógica de autenticación
-        private int ObtenerIdUsuarioLogueado()
-        {
-            // Ejemplo temporal:
-            return 1;
-        }
-    }
-
-    // DTO para creación de reseña
-    public class CrearResenaDTO
-    {
-        public string Contenido { get; set; } = string.Empty;
-        public int Calificacion { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using backend.Data;
 using backend.Models;
-using System.Linq;
+using backend.DTOs;
 
 namespace backend.Controllers
 {
@@ -17,21 +17,28 @@ namespace backend.Controllers
         public IActionResult GetAll() => Ok(_context.PeliculaGeneros.ToList());
 
         // POST: api/peliculagenero
-        // Solo recibe los IDs, no crea peliculas ni generos
         [HttpPost]
-        public IActionResult Crear([FromBody] PeliculaGenero relacion)
+        public IActionResult Crear([FromBody] PeliculaGeneroDTO dto)
         {
-            if (relacion == null)
+            if (dto == null)
                 return BadRequest("Datos inválidos.");
 
             var existe = _context.PeliculaGeneros
-                .Any(pg => pg.ID_Pelicula == relacion.ID_Pelicula && pg.ID_Genero == relacion.ID_Genero);
+                .Any(pg => pg.ID_Pelicula == dto.ID_Pelicula && pg.ID_Genero == dto.ID_Genero);
+
             if (existe)
                 return BadRequest("La relación ya existe.");
 
-            _context.PeliculaGeneros.Add(relacion);
+            var nuevaRelacion = new PeliculaGenero
+            {
+                ID_Pelicula = dto.ID_Pelicula,
+                ID_Genero = dto.ID_Genero
+            };
+
+            _context.PeliculaGeneros.Add(nuevaRelacion);
             _context.SaveChanges();
-            return Ok(relacion);
+
+            return Ok(nuevaRelacion);
         }
 
         // DELETE: api/peliculagenero/{idPelicula}/{idGenero}

@@ -1,6 +1,9 @@
-public class CrearResenaDTO
+namespace backend.DTOs
 {
-    public string Contenido { get; set; } = string.Empty;
-    
-    public int Calificacion { get; set; } // Por ejemplo, 1 a 5
+    public class CrearResenaDTO
+    {
+        public string Contenido { get; set; } = string.Empty;
+        public int Calificacion { get; set; }
+        public int ID_Pelicula { get; set; } // Agregamos esto
+    }
 }

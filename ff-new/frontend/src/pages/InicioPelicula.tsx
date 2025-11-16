@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-
 import NavbarIn from "../components/NavbarIn";
 import CarruselActores from "../components/CarruselActores";
 import "../styles/Pages/InicioPelicula.css";
-
+import "../styles/Pages/MisResenas.css";
+import API_URL from "../api/config";
 import visto0 from "../assets/img/visto0.png";
 import visto1 from "../assets/img/visto1.png";
 import Fav0 from "../assets/img/Like0.png";
@@ -46,20 +46,35 @@ const PeliculaPantalla: React.FC = () => {
   const [favorito, setFavorito] = useState(false);
   const [visto, setVisto] = useState(false);
   const [resenas, setResenas] = useState<Resena[]>([]);
+  const [showModal, setShowModal] = useState(false);
+  const [nuevoContenido, setNuevoContenido] = useState("");
+  const [nuevoRating, setNuevoRating] = useState<number>(0);
+  const [publicando, setPublicando] = useState(false);
+
+  const promedioCalificacion = useMemo(() => {
+    if (!Array.isArray(resenas) || resenas.length === 0) return 0;
+    // Filtrar solo reseñas válidas con calificacion numérica
+    const validas = resenas.filter(r => r && typeof r.calificacion === 'number');
+    if (validas.length === 0) return 0;
+    const suma = validas.reduce((acc, r) => acc + r.calificacion, 0);
+    return suma / validas.length;
+  }, [resenas]);
+
+  const promedioRedondeado = Math.round(promedioCalificacion);
 
   useEffect(() => {
     if (!id) return;
 
-    // 🔹 Cargar datos de la película
     fetch(`https://localhost:5001/api/peliculas/${id}`)
       .then((res) => res.json())
       .then((data) => {
-        const generosNombres: string[] = (data.genero ?? []).map((g: Genero) => g.nombre);
+        const generosNombres: string[] = (data.genero ?? []).map(
+          (g: Genero) => g.nombre
+        );
         setPelicula({ ...data, genero: generosNombres });
       })
       .catch((err) => console.error("Error al cargar película:", err));
 
-    // 🔹 Cargar reseñas automáticamente (como el carrusel)
     fetch(`https://localhost:5001/api/resenas/pelicula/${id}`)
       .then((res) => {
         if (!res.ok) throw new Error("No hay reseñas disponibles");
@@ -85,6 +100,102 @@ const PeliculaPantalla: React.FC = () => {
   const toggleFavorito = () => setFavorito(!favorito);
   const toggleVisto = () => setVisto(!visto);
 
+  const openModal = () => setShowModal(true);
+  const closeModal = () => {
+    setShowModal(false);
+    setNuevoContenido("");
+    setNuevoRating(0);
+  };
+
+  const handleStarClick = (value: number) => setNuevoRating(value);
+
+  const handlePublicar = async () => {
+    const usuarioGuardado = localStorage.getItem("usuario");
+
+    if (!usuarioGuardado) {
+      alert("Debes iniciar sesión para publicar una reseña.");
+      navigate("/");
+      return;
+    }
+
+    let parsed;
+    try {
+      parsed = JSON.parse(usuarioGuardado);
+    } catch (error) {
+      alert("Error en los datos de sesión. Inicia sesión nuevamente.");
+      navigate("/");
+      return;
+    }
+
+    const token = parsed?.token;
+
+    if (!token) {
+      alert("Token de autenticación no encontrado. Inicia sesión nuevamente.");
+      navigate("/");
+      return;
+    }
+
+    if (!nuevoContenido.trim()) {
+      alert("La reseña no puede estar vacía.");
+      return;
+    }
+
+    if (nuevoContenido.trim().length < 10) {
+      alert("La reseña debe tener al menos 10 caracteres.");
+      return;
+    }
+
+    if (nuevoRating <= 0 || nuevoRating > 5) {
+      alert("Selecciona una calificación válida entre 1 y 5 estrellas.");
+      return;
+    }
+
+    setPublicando(true);
+
+    try {
+      const res = await fetch(`${API_URL}/resenas`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          Contenido: nuevoContenido.trim(),
+          Calificacion: nuevoRating,
+          ID_Pelicula: Number(id),
+        }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => null);
+        throw new Error(errorData?.mensaje || `Error ${res.status}`);
+      }
+
+      const response = await res.json();
+      setResenas((prev) => [response.resena, ...prev]);
+      alert(response.mensaje || "¡Reseña publicada exitosamente!");
+      closeModal();
+      
+    } catch (error: any) {
+      console.error("Error al publicar reseña:", error);
+      
+      if(error.message.includes("Ya has publicado")) {
+        alert(error.message);
+        fetch(`https://localhost:5001/api/resenas/pelicula/${id}`)
+          .then((res) => {
+            if (!res.ok) throw new Error("No hay reseñas disponibles");
+            return res.json();
+          })
+          .then((data) => setResenas(data))
+          .catch(() => setResenas([]));
+      } else {
+        alert(error.message || "No se pudo publicar la reseña. Intenta más tarde.");
+      }
+    } finally {
+      setPublicando(false);
+    }
+  };
+
   return (
     <div>
       <NavbarIn
@@ -104,6 +215,16 @@ const PeliculaPantalla: React.FC = () => {
                 alt={pelicula.titulo}
               />
             </div>
+
+            <div className="text-center">
+              <button
+                type="button"
+                className="btn btn-warning BTNRES"
+                onClick={openModal}
+              >
+                Hacer Reseña
+              </button>
+            </div>
           </div>
 
           <div className="col-1"></div>
@@ -114,8 +235,27 @@ const PeliculaPantalla: React.FC = () => {
                 <h2>{pelicula.titulo}</h2>
               </div>
 
-              <div className="col-lg-12 estrellas text-center" data-calificacion="">
-                ☆☆☆☆☆
+              <div
+                className="col-lg-12 estrellas text-center"
+                data-calificacion={promedioRedondeado}
+              >
+                <div className="avg-stars" aria-hidden>
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <span
+                      key={i}
+                      className={i < promedioRedondeado ? "star on" : "star"}
+                    >
+                      ★
+                    </span>
+                  ))}
+                </div>
+
+                {resenas.length > 0 && (
+                  <div className="text-muted conteoRes">
+                    {promedioCalificacion.toFixed(1)} / 5 ({resenas.length}{" "}
+                    reseña{resenas.length > 1 ? "s" : ""})
+                  </div>
+                )}
               </div>
 
               <div className="col-lg-12 text-center IconosDiv">
@@ -169,7 +309,9 @@ const PeliculaPantalla: React.FC = () => {
           <div className="col-1"></div>
           <div className="col-10 tablaDatos">
             <div className="mt-3 text-center">
-              <h2 className="text-center text-light DG DGM">Datos Generales</h2>
+              <h2 className="text-center text-light DG DGM">
+                Datos Generales
+              </h2>
               <div className="my-3"></div>
               <div className="table-responsive">
                 <table className="table table-bordered text-light">
@@ -182,6 +324,7 @@ const PeliculaPantalla: React.FC = () => {
                           : "No disponible"}
                       </td>
                     </tr>
+
                     <tr>
                       <th>Recaudación</th>
                       <td>
@@ -190,6 +333,7 @@ const PeliculaPantalla: React.FC = () => {
                           : "No disponible"}
                       </td>
                     </tr>
+
                     <tr>
                       <th>Duración</th>
                       <td>
@@ -198,6 +342,7 @@ const PeliculaPantalla: React.FC = () => {
                           : "No disponible"}
                       </td>
                     </tr>
+
                     <tr>
                       <th>Fecha de Estreno</th>
                       <td>
@@ -208,6 +353,7 @@ const PeliculaPantalla: React.FC = () => {
                           : "No disponible"}
                       </td>
                     </tr>
+
                     <tr>
                       <th>Género</th>
                       <td>
@@ -216,6 +362,7 @@ const PeliculaPantalla: React.FC = () => {
                           : "No disponible"}
                       </td>
                     </tr>
+
                     <tr>
                       <th>Clasificación</th>
                       <td>{pelicula.clasificacion || "No disponible"}</td>
@@ -231,7 +378,6 @@ const PeliculaPantalla: React.FC = () => {
       <br />
       <hr />
 
-      {/* 🔹 Carrusel de actores */}
       <div className="container text-center mt-5">
         <h2 className="text-light DG RepartoH2">REPARTO</h2>
         {id && (
@@ -243,28 +389,106 @@ const PeliculaPantalla: React.FC = () => {
 
       <hr id="br_mb" />
 
-      {/* 🔹 Bloque de reseñas (automático como carrusel) */}
       <div className="container text-light">
         <h2 className="text-center pt-3 DG">Reseñas de Usuarios</h2>
+
         <div id="ContenedorReseñas">
           {resenas.length === 0 && (
             <p className="text-center">No hay reseñas aún.</p>
           )}
 
           <div className="reviews-list">
-            {resenas.map((resena, index) => (
-              <div className="card review-card bg-dark text-light mb-4 pr-4 pl-4 d-flex" key={index}>
-                <div className="review-body card_m">
-                  <div className="review-user-name text-warning mb-1">{resena.usuario?.nickname || 'Usuario'}</div>
-                  <div className="review-content text-justify mb-1">{resena.contenido}</div>
-                  <div className="review-stars">{"⭐".repeat(resena.calificacion)}</div>
-                </div>
+            {resenas.filter(r => r && r.usuario && typeof r.calificacion === 'number').map((resena, index) => (
+              <div className="mb-4" key={index}>
+                <article className="resena-card">
+                  <header className="resena-header">
+                    <h5 className="resena-username">
+                      {resena.usuario.nickname || "Usuario"}
+                    </h5>
+                  </header>
+
+                  <br />
+
+                  <section className="resena-body text-justify p-3">
+                    <p className="resena-text">{resena.contenido}</p>
+
+                    <div
+                      className="resena-rating"
+                      aria-label={`Calificación: ${resena.calificacion} de 5`}
+                    >
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <span
+                          key={i}
+                          className={
+                            i < resena.calificacion ? "star on" : "star"
+                          }
+                        >
+                          ★
+                        </span>
+                      ))}
+                    </div>
+                  </section>
+                </article>
               </div>
             ))}
           </div>
-
         </div>
       </div>
+
+      {showModal && (
+        <div className="modal-overlay" role="dialog" aria-modal="true">
+          <div className="modal-dialog" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <div className="modal-title text-warning">Nueva Reseña</div>
+              <button
+                onClick={closeModal}
+                aria-label="Cerrar"
+                className="btn-cancel"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="modal-body">
+              <label htmlFor="contenido">Contenido</label>
+              <textarea
+                id="contenido"
+                value={nuevoContenido}
+                onChange={(e) => setNuevoContenido(e.target.value)}
+              />
+
+              <div className="modal-stars">
+                <label>Calificación</label>
+                <div>
+                  {Array.from({ length: 5 }).map((_, i) => {
+                    const val = i + 1;
+                    return (
+                      <span
+                        key={i}
+                        className={val <= nuevoRating ? "star on" : "star"}
+                        onClick={() => handleStarClick(val)}
+                        style={{ marginRight: 8 }}
+                      >
+                        ★
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="modal-actions">
+                <button
+                  className="btn-publish"
+                  onClick={handlePublicar}
+                  disabled={!nuevoContenido.trim() || nuevoRating === 0 || publicando}
+                >
+                  {publicando ? "Publicando..." : "Publicar"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

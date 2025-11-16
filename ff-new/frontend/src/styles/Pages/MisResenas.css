@@ -1,0 +1,164 @@
+/* Estilos para la página MisResenas - lenguaje amarillo/negro/marrón, serif en texto */
+.resena-card {
+  background: #151515; /* slightly darker than page */
+  border: 2px solid #2C1810; /* dark brown border */
+  box-shadow: 0 6px 18px rgba(44,24,16,0.6), 0 0 0 4px rgba(255,215,0,0.03);
+  padding: 18px;
+  border-radius: 8px;
+  color: #f5f5f5;
+  font-family: "Times New Roman", Times, serif;
+}
+
+.resena-header {
+  margin-bottom: 8px;
+}
+
+.resena-username {
+  color: #FFD700; /* gold */
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: 0.6px;
+}
+
+.resena-body {
+  margin-top: 6px;
+  margin-bottom: 12px;
+}
+
+.resena-text {
+  color: #e6e6e6;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.resena-rating {
+  font-size: 1.05rem;
+}
+
+.star {
+  color: rgba(255,215,0,0.25);
+  margin-right: 4px;
+}
+
+.star.on {
+  color: #FFD700;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.6);
+}
+
+.resena-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.pelicula-info {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.pelicula-label {
+  color: #cccccc;
+  font-weight: 600;
+}
+
+.pelicula-title {
+  color: #FFD700;
+  font-weight: 700;
+}
+
+.btn-modificar {
+  background: linear-gradient(180deg,#FFD700,#f0c200);
+  color: #1a1a1a;
+  border: 2px solid #2C1810;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.btn-modificar:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(44,24,16,0.4);
+}
+
+/* Responsive tweaks */
+@media (max-width: 576px) {
+  .resena-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .btn-modificar {
+    margin-top: 8px;
+    width: 100%;
+  }
+}
+
+/* Modal styles for review creation */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+}
+.modal-dialog {
+  background: #121212;
+  border: 2px solid #2C1810;
+  padding: 18px;
+  width: 100%;
+  max-width: 640px;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(44,24,16,0.6);
+}
+.modal-dialog {
+  background: #121212;
+  border: 2px solid #2C1810;
+  padding: 18px;
+  width: 100%;
+  max-width: 640px;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(44,24,16,0.6);
+  z-index: 1060;
+  pointer-events: auto;
+  font-family: "Times New Roman", Times, serif;
+}
+.modal-body label { display:block; color:#e6e6e6; margin-bottom:6px; }
+.modal-body textarea {
+  width:100%;
+  min-height:110px;
+  background:#0f0f0f;
+  color:#e6e6e6;
+  border:1px solid #2C1810;
+  border-radius:6px;
+  padding:8px;
+  resize:vertical;
+}
+.modal-stars { margin:10px 0; }
+.modal-stars .star { font-size:1.6rem; cursor:pointer; color: rgba(255,215,0,0.25); margin-right:6px; }
+.modal-stars .star.on { color:#FFD700; text-shadow: 0 1px 0 rgba(0,0,0,0.6); }
+.modal-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:8px; }
+.btn-cancel {
+  background: #cc3b3b;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius:6px;
+  cursor:pointer;
+}
+.btn-cancel:hover { opacity:0.95; transform: translateY(-1px); }
+.btn-publish {
+  background: linear-gradient(180deg,#FFD700,#f0c200);
+  color: #1a1a1a;
+  border: 2px solid #2C1810;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 700;
+}
+.btn-publish:disabled { opacity:0.6; cursor:not-allowed; }
+

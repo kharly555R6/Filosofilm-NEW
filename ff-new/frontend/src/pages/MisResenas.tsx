@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import NavbarIn from "../components/NavbarIn";
 import NavbarInInferior from "../components/NavbarInInferior";
 import API_URL from "../api/config"; // Asegúrate que aquí esté la URL de tu API
+import "../styles/Pages/MisResenas.css";
 
 interface Resena {
   id_Reseña: number;
@@ -138,22 +139,33 @@ const MisResenas: React.FC = () => {
         ) : (
           <div className="row">
             {resenas.map((resena) => (
-              <div key={resena.id_Reseña} className="col-12 mb-3">
-                <div className="card bg-dark text-light p-3">
-                  <h5 className="text-warning">{resena.usuario.nickname}</h5>
-                  <p>{resena.contenido}</p>
-                  <p>{"⭐".repeat(resena.calificacion)}</p>
-                  <div className="row align-items-center">
-                    <div className="col-6">
-                      <p>
-                        Película: <span className="text-warning">{resena.titulo || "Desconocida"}</span>
-                      </p>
+              <div key={resena.id_Reseña} className="col-12">
+                <article className="resena-card">
+                  <header className="resena-header">
+                    <h5 className="resena-username">{resena.usuario.nickname}</h5>
+                  </header>
+
+                  <br />
+
+                  <section className="resena-body p-3 text-justify">
+                    <p className="resena-text">{resena.contenido}</p>
+                    <div className="resena-rating" aria-label={`Calificación: ${resena.calificacion} de 5`}>
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <span key={i} className={i < resena.calificacion ? "star on" : "star"}>★</span>
+                      ))}
                     </div>
-                    <div className="col-6 text-end">
-                      <button onClick={() => handleModificar(resena.id_Reseña)}>Modificar</button>
+                  </section>
+
+                  <footer className="resena-footer p-3">
+                    <div className="pelicula-info">
+                      <span className="pelicula-label">Película:</span>
+                      <span className="pelicula-title">{resena.titulo || "Desconocida"}</span>
                     </div>
-                  </div>
-                </div>
+                    <div>
+                      <button className="btn-modificar" onClick={() => handleModificar(resena.id_Reseña)}>Modificar</button>
+                    </div>
+                  </footer>
+                </article>
               </div>
             ))}
           </div>

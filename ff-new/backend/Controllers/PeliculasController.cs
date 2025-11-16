@@ -49,6 +49,23 @@ namespace backend.Controllers
             return Ok(result);
         }
 
+    // GET: api/peliculas/genero/{idGenero}
+        [HttpGet("genero/{idGenero}")]
+        public IActionResult GetPorGenero(int idGenero)
+        {
+            var peliculas = _context.Peliculas
+                .Where(p => p.PeliculaGeneros.Any(pg => pg.ID_Genero == idGenero))
+                .Select(p => new 
+                { 
+                    p.ID_Pelicula, 
+                    p.Titulo, 
+                    p.Imagen 
+                })
+                .ToList();
+
+            return Ok(peliculas);
+        }
+
         // POST: api/peliculas
         [HttpPost]
         public IActionResult Crear([FromBody] Pelicula pelicula)
