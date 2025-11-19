@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using backend.Data;
 using backend.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace backend.Controllers
 {
@@ -14,7 +12,22 @@ namespace backend.Controllers
         public ActoresController(AppDbContext context) => _context = context;
 
         [HttpGet]
-        public IActionResult GetActores() => Ok(_context.Actores.ToList());
+        public IActionResult GetActores()
+        {
+            var actores = _context.Actores
+                .Select(a => new 
+                {
+                    id_Actor = a.ID_Actor,
+                    actor = new 
+                    {
+                        nombre = a.Nombre,
+                        foto = a.Foto_Actor
+                    }
+                })
+                .ToList();
+
+            return Ok(actores);
+        }
 
         [HttpGet("{id}")]
         public IActionResult GetActor(int id)

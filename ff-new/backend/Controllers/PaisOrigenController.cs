@@ -38,7 +38,6 @@ namespace backend.Controllers
             if (existente == null) return NotFound();
 
             existente.Nombre = pais.Nombre;
-            existente.Pais_Imagen = pais.Pais_Imagen;
             _context.SaveChanges();
             return Ok(existente);
         }

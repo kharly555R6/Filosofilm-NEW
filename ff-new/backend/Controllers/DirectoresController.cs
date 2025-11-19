@@ -13,7 +13,22 @@ namespace backend.Controllers
         public DirectoresController(AppDbContext context) => _context = context;
 
         [HttpGet]
-        public IActionResult GetDirectores() => Ok(_context.Director.ToList());
+        public IActionResult GetDirectores() 
+        {
+            var directores = _context.Director
+                .Select(d => new 
+                {
+                    id_Director = d.ID_Director,
+                    director = new 
+                    {
+                        nombre = d.Nombre,
+                        foto = d.Foto_Director
+                    }
+                })
+                .ToList();
+
+            return Ok(directores);
+        }
 
         [HttpGet("{id}")]
         public IActionResult GetDirector(int id)

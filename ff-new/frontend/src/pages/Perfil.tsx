@@ -151,7 +151,6 @@ const Perfil: React.FC = () => {
       .then((data) => {
         console.log("Datos crudos de vistos:", data);
         
-        // Verificar la estructura de la respuesta
         if (Array.isArray(data)) {
           const candidateIds = data.map((item: any) => {
             const peli = item.pelicula || item;

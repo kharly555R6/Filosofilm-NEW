@@ -13,8 +13,5 @@ namespace backend.Models
         [Required]
         [MaxLength(20)]
         public string Nombre { get; set; } = string.Empty;
-
-        [Required]
-        public string Pais_Imagen { get; set; } = string.Empty;
     }
 }

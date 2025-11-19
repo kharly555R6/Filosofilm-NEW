@@ -4,21 +4,30 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 
-interface ActorItem {
-  id_Actor: number;
-  personaje: string;
-  actor: {
-    nombre: string;
-    foto: string;
-  };
-}
+
+type ActorOrDirectorItem =
+  | {
+      id_Actor: number;
+      personaje: string;
+      actor: {
+        nombre: string;
+        foto: string;
+      };
+    }
+  | {
+      id_Director: number;
+      director: {
+        nombre: string;
+        foto: string;
+      };
+    };
 
 interface CarruselActoresProps {
-  endpoint: string; // URL del backend (por ejemplo: api/ActorPeliculas/pelicula/1)
+  endpoint: string;
 }
 
 const CarruselActores: React.FC<CarruselActoresProps> = ({ endpoint }) => {
-  const [actores, setActores] = useState<ActorItem[]>([]);
+  const [items, setItems] = useState<ActorOrDirectorItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -27,7 +36,7 @@ const CarruselActores: React.FC<CarruselActoresProps> = ({ endpoint }) => {
         const response = await fetch(endpoint);
         if (!response.ok) throw new Error("Error al cargar los actores");
         const data = await response.json();
-        setActores(data);
+        setItems(data);
       } catch (error) {
         console.error(error);
       } finally {
@@ -39,7 +48,7 @@ const CarruselActores: React.FC<CarruselActoresProps> = ({ endpoint }) => {
   }, [endpoint]);
 
   if (loading) return <p className="text-light">Cargando actores...</p>;
-  if (actores.length === 0) return <p className="text-light my-5 pt-5 pb-3">No hay actores registrados.</p>;
+  if (items.length === 0) return <p className="text-light my-5 pt-5 pb-3">No hay elementos registrados.</p>;
 
   return (
     <div className="carrusel-container">
@@ -54,21 +63,42 @@ const CarruselActores: React.FC<CarruselActoresProps> = ({ endpoint }) => {
           480: { slidesPerView: 1 },
         }}
       >
-        {actores.map((item) => (
-          <SwiperSlide key={item.id_Actor}>
-            <div className="carousel-slot text-center">
-              <img
-                src={item.actor.foto}
-                alt={item.actor.nombre}
-                className="imgPelicula"
-              />
-              <h5 className="text-light mt-2">{item.actor.nombre}</h5>
-              <p className="text-secondary" style={{ fontSize: "0.9rem" }}>
-                {item.personaje}
-              </p>
-            </div>
-          </SwiperSlide>
-        ))}
+        {items.map((item) => {
+          // Actor
+          if ('actor' in item) {
+            return (
+              <SwiperSlide key={item.id_Actor}>
+                <div className="carousel-slot text-center">
+                  <img
+                    src={item.actor.foto}
+                    alt={item.actor.nombre}
+                    className="imgPelicula"
+                  />
+                  <h5 className="text-light mt-2">{item.actor.nombre}</h5>
+                  <p className="text-secondary" style={{ fontSize: "0.9rem" }}>
+                    {item.personaje}
+                  </p>
+                </div>
+              </SwiperSlide>
+            );
+          }
+          // Director
+          if ('director' in item) {
+            return (
+              <SwiperSlide key={item.id_Director}>
+                <div className="carousel-slot text-center">
+                  <img
+                    src={item.director.foto}
+                    alt={item.director.nombre}
+                    className="imgPelicula"
+                  />
+                  <h5 className="text-light mt-2">{item.director.nombre}</h5>
+                </div>
+              </SwiperSlide>
+            );
+          }
+          return null;
+        })}
       </Swiper>
     </div>
   );
