@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using backend.Data;
 using backend.Models;
-using System.Linq;
 
 namespace backend.Controllers
 {

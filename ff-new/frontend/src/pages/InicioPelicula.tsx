@@ -45,6 +45,7 @@ const PeliculaPantalla: React.FC = () => {
   const [pelicula, setPelicula] = useState<Pelicula | null>(null);
   const [favorito, setFavorito] = useState(false);
   const [visto, setVisto] = useState(false);
+  const [like, setLike] = useState(false);
   const [resenas, setResenas] = useState<Resena[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [nuevoContenido, setNuevoContenido] = useState("");
@@ -52,6 +53,7 @@ const PeliculaPantalla: React.FC = () => {
   const [publicando, setPublicando] = useState(false);
   const [cargandoFavorito, setCargandoFavorito] = useState(false);
   const [cargandoVisto, setCargandoVisto] = useState(false);
+  const [cargandoLike, setCargandoLike] = useState(false);
 
   const promedioCalificacion = useMemo(() => {
     if (!Array.isArray(resenas) || resenas.length === 0) return 0;
@@ -86,6 +88,7 @@ const PeliculaPantalla: React.FC = () => {
 
     cargarEstadoFavorito();
     cargarEstadoVisto();
+    cargarEstadoLike();
   }, [id]);
 
   const cargarEstadoFavorito = async () => {
@@ -110,6 +113,31 @@ const PeliculaPantalla: React.FC = () => {
       }
     } catch (error) {
       console.error("Error al cargar estado de favorito:", error);
+    }
+  };
+
+  const cargarEstadoLike = async () => {
+    const usuarioGuardado = localStorage.getItem("usuario");
+    if (!usuarioGuardado || !id) return;
+
+    try {
+      const parsed = JSON.parse(usuarioGuardado);
+      const token = parsed?.token;
+
+      if (!token) return;
+
+      const res = await fetch(`${API_URL}/Likes/resena/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setLike(data.dioLike);
+      }
+    } catch (error) {
+      console.error("Error al cargar estado de like:", error);
     }
   };
 
@@ -270,6 +298,69 @@ const PeliculaPantalla: React.FC = () => {
       alert(error.message || "Error al gestionar películas vistas");
     } finally {
       setCargandoVisto(false);
+    }
+  };
+
+  const toggleLike = async () => {
+    const usuarioGuardado = localStorage.getItem("usuario");
+    if (!usuarioGuardado || !id) {
+      alert("Debes iniciar sesión para gestionar likes.");
+      navigate("/");
+      return;
+    }
+
+    setCargandoLike(true);
+
+    try {
+      const parsed = JSON.parse(usuarioGuardado);
+      const token = parsed?.token;
+
+      if (!token) {
+        alert("Token de autenticación no encontrado.");
+        return;
+      }
+
+      if (like) {
+        const res = await fetch(`${API_URL}/Likes/resena/${id}`, {
+          method: "DELETE",
+
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (res.ok) {
+          setLike(false);
+          const data = await res.json();
+        } else {
+          throw new Error("Error al eliminar el like");
+        }
+
+      } else {
+        const res = await fetch(`${API_URL}/Likes`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            ID_Resena: Number(id),
+          }),
+        });
+
+        if (res.ok) {
+          setLike(true);
+          const data = await res.json();
+        } else {
+          const errorData = await res.json().catch(() => null);
+          throw new Error(errorData?.mensaje || "Error al agregar el like");
+        }
+      }
+    } catch (error: any) {
+      console.error("Error en likes:", error);
+      alert(error.message || "Error al gestionar likes");
+    } finally {
+      setCargandoLike(false);
     }
   };
 
@@ -443,9 +534,6 @@ const PeliculaPantalla: React.FC = () => {
                       src={favorito ? Fav1 : Fav0}
                       alt="Ícono Favorita"
                     />
-                    <div>
-                      {cargandoFavorito ? "Cargando..." : "Favorita"}
-                    </div>
                   </div>
 
                   <div
@@ -459,9 +547,6 @@ const PeliculaPantalla: React.FC = () => {
                       src={visto ? visto1 : visto0}
                       alt="Ícono Vista"
                     />
-                    <div>
-                      {cargandoVisto ? "Cargando..." : "Vista"}
-                    </div>
                   </div>
                 </div>
               </div>
@@ -605,6 +690,18 @@ const PeliculaPantalla: React.FC = () => {
                       ))}
                     </div>
                   </section>
+
+                  <button
+                    className="resena-like"
+                    type="button"
+                    aria-label="Me gusta"
+                    title="Me gusta"
+                    onClick={toggleLike}
+                    style={{ cursor: cargandoLike ? "not-allowed" : "pointer" }}
+                  >
+                    <span aria-hidden>♥</span>
+                  </button>
+
                 </article>
               </div>
             ))}

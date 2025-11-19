@@ -9,6 +9,11 @@
   font-family: "Times New Roman", Times, serif;
 }
 
+/* allow absolutely positioned controls inside the card */
+.resena-card {
+  position: relative;
+}
+
 .resena-header {
   margin-bottom: 8px;
 }
@@ -161,4 +166,58 @@
   font-weight: 700;
 }
 .btn-publish:disabled { opacity:0.6; cursor:not-allowed; }
+
+/* Like button inside review card (icon-only, no functionality) */
+.resena-like {
+  position: absolute;
+  right: 30px;
+  bottom: 30px;
+  width: 60px;
+  height: 60px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,215,0,0.06);
+  color: #FFD700;
+  border: 2px solid #FFD700;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 2rem;
+  transition: transform 0.3s,font-size 0.25s;
+}
+
+.resena-like:hover {
+  background: #0f0f0f;
+  color: #ff0000;
+  font-size: 2.5rem;
+  border: 2px solid #FFD700;
+  box-shadow: 0 8px 16px rgba(226, 111, 66, 0.35);
+}
+
+/* estado permanente cuando está likeado */
+.resena-like.liked {
+  background: #0f0f0f;
+  color: #ff0000;
+  font-size: 2.5rem;
+  border: 2px solid #FFD700;
+  box-shadow: 0 8px 16px rgba(226, 111, 66, 0.35);
+  transform: scale(1.05);
+}
+
+/* conserva tu :active para la pulsación momentánea */
+.resena-like:active {
+  background: #0f0f0f;
+  color: #ff0000;
+  font-size: 2.5rem;
+  border: 2px solid #FFD700;
+  box-shadow: 0 8px 16px rgba(226, 111, 66, 0.35);
+}
+
+/* opcional: suavizar la transición al cambiar a liked */
+.resena-like {
+  transition: transform 0.25s, font-size 0.25s, background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+
+
 

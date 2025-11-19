@@ -264,6 +264,7 @@ const Perfil: React.FC = () => {
             </div>
           )}
         </div>
+        
       </div>
     </div>
   );
