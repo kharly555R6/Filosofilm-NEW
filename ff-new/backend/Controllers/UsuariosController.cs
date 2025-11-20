@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using backend.Data;
 using backend.Models;
 using backend.DTOs;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -20,6 +21,30 @@ namespace backend.Controllers
         public UsuariosController(AppDbContext context)
         {
             _context = context;
+        }
+
+        [HttpGet("usuarios")]
+        public async Task<IActionResult> GetUsuarios()
+        {
+            var usuarios = await _context.Usuarios
+                .Select(u => new
+                {
+                    id_Usuario = u.ID_Usuario,
+                    nickname = u.Nickname,
+                    nombre = u.Nombre,
+                    apellido = u.Apellido,
+                    correo_Electronico = u.Correo_Electronico,
+                    telefono = u.Telefono,
+                    sexo = u.Sexo,
+                    fecha_Nacimiento = u.Fecha_Nacimiento,
+                    foto_Perfil = u.Foto_Perfil,
+                    fecha_Registro = u.Fecha_Registro,
+                    id_Rol = u.ID_Rol,
+                    descripcion = u.Descripcion
+                })
+                .ToListAsync();
+
+            return Ok(usuarios);
         }
 
         // 🔹 REGISTRO
@@ -147,6 +172,39 @@ namespace backend.Controllers
             _context.SaveChanges();
 
             return Ok(new { message = "Usuario actualizado correctamente." });
+        }
+
+        // 🔹 ACTUALIZAR DATOS DE USUARIO (Admin)
+        [HttpPut("actualizarAdmin")]
+        public IActionResult ActualizarUsuarioAdmin([FromBody] UsuarioActualizarAdminDTO datos)
+        {
+            var usuario = _context.Usuarios.FirstOrDefault(u => u.ID_Usuario == datos.ID_Usuario);
+
+            if (usuario == null)
+                return NotFound("Usuario no encontrado.");
+
+            if (!string.IsNullOrEmpty(datos.Nickname))
+                usuario.Nickname = datos.Nickname;
+            if (!string.IsNullOrEmpty(datos.Nombre))
+                usuario.Nombre = datos.Nombre;
+            if (!string.IsNullOrEmpty(datos.Apellido))
+                usuario.Apellido = datos.Apellido;
+            if (!string.IsNullOrEmpty(datos.Telefono))
+                usuario.Telefono = datos.Telefono;
+            if (!string.IsNullOrEmpty(datos.Sexo))
+                usuario.Sexo = datos.Sexo;
+            if (datos.Fecha_Nacimiento.HasValue)
+                usuario.Fecha_Nacimiento = datos.Fecha_Nacimiento.Value;
+            if (datos.ID_Rol.HasValue)
+                usuario.ID_Rol = datos.ID_Rol.Value;
+            if (!string.IsNullOrEmpty(datos.Descripcion))
+                usuario.Descripcion = datos.Descripcion;
+            if (!string.IsNullOrEmpty(datos.Foto_Perfil))
+                usuario.Foto_Perfil = datos.Foto_Perfil;
+
+            _context.SaveChanges();
+
+            return Ok(new { message = "Usuario actualizado correctamente por el admin." });
         }
 
         // 🔹 ELIMINAR USUARIO POR ID (Admin)

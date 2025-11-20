@@ -150,11 +150,12 @@ const Perfil: React.FC = () => {
             <p className="text-center mt-3">Cargando información...</p>
           )}
 
-          <a href="/Configuracion" className="miinfo-back w-100 text-center">
+          <a href="/Configuracion" className="miinfo-submit w-100 text-center">
             Editar
           </a>
         </div>
       </div>
+      
     </div>
   );
 };

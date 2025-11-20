@@ -49,26 +49,6 @@
     border-radius: 6px;
 }
 
-/* Back button */
-.miinfo-back{
-    display: inline-block;
-    margin-top: 1.5rem;
-    background: #1A1A1A;
-    color: #FFD700;
-    border: 2px solid #FFD700;
-    padding: 0.65rem 1.5rem;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: 700;
-    transition: 0.2s;
-}
-
-.miinfo-back:hover{
-    background: #2C1810;
-    color: #fff;
-    transform: translateY(-2px);
-}
-
 @media (min-width: 768px){
     .miinfo-row{
         flex-direction: row;
@@ -108,5 +88,8 @@
 .miinfo-submit:hover{
     background: #2C1810;
     color: #fff;
-    transform: translateY(-2px);
+}
+
+.minfo-black label{
+    color: #000;
 }

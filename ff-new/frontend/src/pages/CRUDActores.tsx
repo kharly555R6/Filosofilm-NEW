@@ -294,9 +294,6 @@ const CRUDActores: React.FC = () => {
 
         <hr />
 
-        {/* ==============================
-              CARRUSEL
-        =============================== */}
         <div className="text-center">
           <h1 className="text-light DG RepartoH2">Actores disponibles</h1>
         </div>
@@ -339,9 +336,6 @@ const CRUDActores: React.FC = () => {
 
                 <div className="modal-body">
 
-                  {/* ===============================
-                        PRIMERA VISTA (pedir ID)
-                  =============================== */}
                   {!modoEdicion && (
                     <>
                       <label>ID del actor a modificar:</label>
@@ -362,9 +356,6 @@ const CRUDActores: React.FC = () => {
                     </>
                   )}
 
-                  {/* ===============================
-                        SEGUNDA VISTA (editar actor)
-                  =============================== */}
                   {modoEdicion && actorData && (
                     <>
                       <label>Nombre:</label>
@@ -428,7 +419,6 @@ const CRUDActores: React.FC = () => {
 
                 </div>
 
-                {/* FOOTER */}
                 <div className="modal-footer">
 
                   {!modoEdicion && (
