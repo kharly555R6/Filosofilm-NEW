@@ -110,13 +110,11 @@ h1{
     box-shadow: 0 4px 8px rgba(0,0,0,0.25);
     text-transform: uppercase;
     letter-spacing: 0.6px;
-    transition: 0.2s;
 }
 
 .crudBtn:hover{
     background-color: #2C1810;
     color: #fff;
-    transform: translateY(-2px);
 }
 
 .cBTN:hover{

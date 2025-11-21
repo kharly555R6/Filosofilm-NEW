@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import logo from '../assets/img/logo.png';
 import '../styles/Pages/Administrador.css';
+import CarruselPelis from "../components/CarruselPelis";
+import API_BASE_URL from "../api/config";
+import fallbackPoster from "../assets/img/cine.jpg";
 
 
-interface Pelicula {
+interface PeliculaForm {
   titulo: string;
   sinopsis: string;
   fechaLanzamiento: string;
@@ -13,9 +16,15 @@ interface Pelicula {
   pais: string;
 }
 
+interface PeliculaCarrusel {
+  iD_Pelicula: number;
+  titulo: string;
+  imagen: string;
+}
+
 const CRUDPeliculas: React.FC = () => {
-  const [peliculas, setPeliculas] = useState<Pelicula[]>([]);
-  const [form, setForm] = useState<Pelicula>({
+  const [peliculas, setPeliculas] = useState<PeliculaForm[]>([]);
+  const [form, setForm] = useState<PeliculaForm>({
     titulo: "",
     sinopsis: "",
     fechaLanzamiento: "",
@@ -24,12 +33,13 @@ const CRUDPeliculas: React.FC = () => {
     recaudacion: 0,
     pais: "",
   });
+  const [peliculasCarrusel, setPeliculasCarrusel] = useState<PeliculaCarrusel[]>([]);
   const [modoEditar, setModoEditar] = useState(false);
   const [indiceEditar, setIndiceEditar] = useState<number | null>(null);
 
   // Simulación de datos iniciales
   useEffect(() => {
-    const inicial: Pelicula[] = [
+    const inicial: PeliculaForm[] = [
       {
         titulo: "Ejemplo 1",
         sinopsis: "Sinopsis de ejemplo",
@@ -41,6 +51,39 @@ const CRUDPeliculas: React.FC = () => {
       },
     ];
     setPeliculas(inicial);
+  }, []);
+
+  useEffect(() => {
+    const cargarPeliculasCarrusel = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/peliculas`);
+        if (!response.ok) {
+          throw new Error(`Error ${response.status}`);
+        }
+
+        const data = await response.json();
+        const normalizadas = (Array.isArray(data) ? data : [])
+          .map((pelicula: any) => {
+            const imagenCruda = pelicula.imagen ?? pelicula.Imagen ?? "";
+            const imagenNormalizada = typeof imagenCruda === "string" && imagenCruda.trim() !== ""
+              ? imagenCruda
+              : fallbackPoster;
+
+            return {
+              iD_Pelicula: pelicula.iD_Pelicula ?? pelicula.id_Pelicula ?? pelicula.id ?? 0,
+              titulo: pelicula.titulo ?? pelicula.Titulo ?? "Sin título",
+              imagen: imagenNormalizada,
+            };
+          })
+          .filter((pelicula: PeliculaCarrusel) => pelicula.iD_Pelicula !== 0);
+
+        setPeliculasCarrusel(normalizadas);
+      } catch (error) {
+        console.error("Error al cargar el carrusel de películas:", error);
+      }
+    };
+
+    cargarPeliculasCarrusel();
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -67,16 +110,6 @@ const CRUDPeliculas: React.FC = () => {
       recaudacion: 0,
       pais: "",
     });
-  };
-
-  const editarPelicula = (index: number) => {
-    setForm(peliculas[index]);
-    setModoEditar(true);
-    setIndiceEditar(index);
-  };
-
-  const eliminarPelicula = (index: number) => {
-    setPeliculas(peliculas.filter((_, i) => i !== index));
   };
 
   return (
@@ -137,35 +170,35 @@ const CRUDPeliculas: React.FC = () => {
           </div>
 
           <div className="text-center mt-3">
-            <button type="submit" className="btn btn-secondary mr-2">{modoEditar ? "Actualizar" : "Agregar"}</button>
+            <button type="submit" className="crudBtn w-100 fw-bold">{modoEditar ? "Actualizar" : "Agregar"}</button>
             {modoEditar && <button type="button" className="btn btn-danger" onClick={() => { setModoEditar(false); setForm({ titulo: "", sinopsis: "", fechaLanzamiento: "", duracion: 0, presupuesto: 0, recaudacion: 0, pais: "" }); }}>Cancelar</button>}
           </div>
         </form>
+      </div>
 
-        <hr />
-        <h2 className="text-center">Películas</h2>
-        <ul className="list-group mt-3">
-          {peliculas.map((p, i) => (
-            <li key={i} className="list-group-item d-flex justify-content-between align-items-center">
-              {p.titulo}
-              <div>
-                <button className="btn btn-warning btn-sm mr-2" onClick={() => editarPelicula(i)}>Editar</button>
-                <button className="btn btn-danger btn-sm" onClick={() => eliminarPelicula(i)}>Eliminar</button>
-              </div>
-            </li>
-          ))}
-        </ul>
+      <br /><hr />
+
+      <h1 className="text-center mt-5 pt-5">Películas disponibles</h1>
+
+      <div className="container" style={{ backgroundColor: "#000" }}>
+          {peliculasCarrusel.length > 0 && (
+            <CarruselPelis
+              titulo=""
+              peliculas={peliculasCarrusel}
+              classNameTitulo="catPeli text-left catPeli1"
+            />
+          )}
+        </div>
 
         <div className="col-12">
           <a
             href="Administrador"
-            className="bg-dark list-group-item list-group-item-action mb-3 text-center text-light"
+            className="crudBtn w-100 fw-bold"
           >
             REGRESAR
           </a>
         </div>
 
-      </div>
     </div>
   );
 };

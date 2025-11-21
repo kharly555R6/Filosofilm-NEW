@@ -13,5 +13,7 @@ namespace backend.Models
         [Required]
         [MaxLength(20)]
         public string Nombre { get; set; } = string.Empty;
+
+        public string? Url_Foto { get; set; } = string.Empty;
     }
 }

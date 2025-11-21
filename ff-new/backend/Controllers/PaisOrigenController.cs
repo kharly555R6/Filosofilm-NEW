@@ -15,14 +15,6 @@ namespace backend.Controllers
         [HttpGet]
         public IActionResult GetTodos() => Ok(_context.PaisOrigen.ToList());
 
-        [HttpGet("{id}")]
-        public IActionResult GetPorId(int id)
-        {
-            var pais = _context.PaisOrigen.FirstOrDefault(p => p.ID_Pais == id);
-            if (pais == null) return NotFound();
-            return Ok(pais);
-        }
-
         [HttpPost]
         public IActionResult Crear([FromBody] PaisOrigen pais)
         {
@@ -38,6 +30,7 @@ namespace backend.Controllers
             if (existente == null) return NotFound();
 
             existente.Nombre = pais.Nombre;
+            existente.Url_Foto = pais.Url_Foto;
             _context.SaveChanges();
             return Ok(existente);
         }
